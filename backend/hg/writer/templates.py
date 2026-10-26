@@ -20,7 +20,7 @@ ISSUE_FIXES: dict[str, str] = {
     "required_docs_present": "Upload the missing documents, then press Re-check.",
     "shares_total_100": "Upload a corrected application so the shares add up to the full account.",
     "name_match": "If a form has a misspelled name, upload a corrected form. If it is the same person, "
-    "estate operations can confirm it.",
+    "send it for review.",
     "dod_consistent": "Upload a corrected form so its date matches the death certificate.",
     "certified_copy": "You can order a certified copy from the vital records office in the county that issued "
     "the certificate, then upload it.",

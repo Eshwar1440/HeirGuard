@@ -43,7 +43,7 @@ account. The input is JSON from a rule check: rule_id, status (fail or needs_rev
 Write one or two short sentences: what is wrong and how to fix it. For example: "Your upload looks like a \
 photocopy. Schwab needs a certified copy, which you can order from the county that issued it."
 The reader cannot type over a value. The fix is always to upload a corrected or missing document; an item that \
-only needs a second look can also be sent to estate operations for review.
+only needs a second look can also be sent for review. Do not mention estate operations.
 {_COMMON_RULES}"""
 
 OPTIONS_SYSTEM = f"""You summarize withdrawal options for a person who inherited an IRA. The input is JSON: the \
