@@ -24,12 +24,10 @@ from hg.flow.graph import (
     HEIR_INPUTS,
     Approval,
     ChoiceAnswer,
-    Correction,
     HeirFix,
     build_flow,
 )
 from hg.graph import export_case_graph
-from hg.graph.resolve import PERSON_FIELDS
 from hg.prefill import PrefillHandoff
 from hg.schemas import AuditEntry, CaseState, CaseStatus, Choice, HeirInputs
 
@@ -145,17 +143,6 @@ def add_documents(case_id: str, uploads: list[tuple[str, bytes, str]]) -> CaseVi
     _require(case_id, HEIR_FIX)
     refs = [files.save_upload(case_id, name, data, ctype) for name, data, ctype in uploads]
     return _resume(case_id, HEIR_FIX, HeirFix(uploads=refs).model_dump())
-
-
-def correct_field(case_id: str, field: str, document_id: str, value: str) -> CaseView:
-    if field in PERSON_FIELDS:
-        raise FlowError(409, f"{field} names a person; upload a corrected document instead of editing it")
-    view = _require(case_id, HEIR_FIX)
-    doc = next((d for d in view.case.documents if d.id == document_id), None)
-    if doc is None or all(f.name != field for f in doc.fields):
-        raise FlowError(404, f"no field {field!r} on document {document_id!r}")
-    fix = HeirFix(corrections=[Correction(document_id=document_id, field=field, value=value)])
-    return _resume(case_id, HEIR_FIX, fix.model_dump())
 
 
 def submit_for_review(case_id: str) -> CaseView:
