@@ -2,19 +2,19 @@ import { useState } from 'react';
 import { Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Typography } from '@mui/material';
 import type { CaseState } from '../api/types';
 import { useChoice } from '../api/hooks';
-import { fieldLabel } from '../lib/format';
+import { plainLabel, plainValue } from '../lib/format';
 import { ErrorCard } from './common';
 import { tokens as t } from '../theme';
 
 const OPT_IN_FIELD = 'rmd_deposit_opt_in';
 
-/** "Death certificate" or "Daniel's application", for a source chip. */
+/** "the death certificate" or "Daniel's application", for a source chip. */
 function sourceName(caseState: CaseState, documentId?: string | null): string {
   const doc = (caseState.documents ?? []).find((d) => d.id === documentId);
-  if (!doc) return documentId ?? '';
-  if (doc.doc_type === 'death_certificate') return 'Death certificate';
+  if (!doc) return 'your documents';
+  if (doc.doc_type === 'death_certificate') return 'the death certificate';
   const who = doc.fields.find((f) => f.name === 'beneficiary_name')?.value;
-  return who ? `${who.split(' ')[0]}'s application` : 'Application';
+  return who ? `${who.split(' ')[0]}'s application` : 'the application';
 }
 
 export default function KeepDialog({ caseState, open, onClose }: { caseState: CaseState; open: boolean; onClose: () => void }) {
@@ -40,10 +40,10 @@ export default function KeepDialog({ caseState, open, onClose }: { caseState: Ca
             const sourced = !!f.source_document_id;
             return (
               <Box key={f.name} data-testid="prefill-row" sx={{ display: 'grid', gridTemplateColumns: '170px 1fr auto', gap: 1.5, alignItems: 'center', py: 1.25, borderBottom: `1px solid ${t.rowRule}` }}>
-                <Box sx={{ fontSize: 12.5, color: t.muted }}>{fieldLabel(f.name)}</Box>
-                <Box sx={{ fontSize: 14, fontWeight: sourced ? 500 : 400, color: sourced ? t.ink : t.muted }}>{sourced ? String(f.value) : heirEntered[f.name] ?? 'Entered by heir at signing'}</Box>
+                <Box sx={{ fontSize: 12.5, color: t.muted }}>{plainLabel(f.name)}</Box>
+                <Box sx={{ fontSize: 14, fontWeight: sourced ? 500 : 400, color: sourced ? t.ink : t.muted }}>{sourced ? plainValue(f.name, f.value) : heirEntered[f.name] ?? 'Entered by heir at signing'}</Box>
                 <Chip size="small" data-testid="source-chip"
-                  label={sourced ? `${sourceName(caseState, f.source_document_id)} · ${f.source_field}` : 'not prefilled'}
+                  label={sourced ? `From ${sourceName(caseState, f.source_document_id)}` : 'You enter this'}
                   sx={{ fontWeight: 500, fontSize: 11, bgcolor: sourced ? t.accentTint : t.rowRule, color: sourced ? t.accentText : t.muted }} />
               </Box>
             );
@@ -64,7 +64,7 @@ export default function KeepDialog({ caseState, open, onClose }: { caseState: Ca
         {excluded.length > 0 && (
           <Box sx={{ pb: 2, fontSize: 12.5, color: t.amberText }} data-testid="prefill-excluded">
             <strong>Left out, for you to enter at signing:</strong>{' '}
-            {excluded.map((e) => `${fieldLabel(e.name)} (${e.reason})`).join('; ')}
+            {excluded.map((e) => plainLabel(e.name)).join(', ')}. The reasons are under the hood.
           </Box>
         )}
         {choice.isError && <Box sx={{ pb: 2 }}><ErrorCard title="We couldn't prefill the application" message={(choice.error as Error).message} /></Box>}

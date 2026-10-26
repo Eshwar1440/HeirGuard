@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { Box, Card, Chip, List, ListItem, Stack, Typography } from '@mui/material';
 import type { Beneficiary, CaseState } from '../api/types';
 import { applicationFor, checksFor, reasonFor, ruleLabel } from '../lib/case';
-import { formatPercent } from '../lib/format';
+import { formatPercent, plainValue } from '../lib/format';
 import { StatusIcon } from './common';
 import { tokens as t } from '../theme';
 
@@ -11,7 +11,7 @@ const SHOWN = [
   ['beneficiary_name', 'Full name'],
   ['beneficiary_date_of_birth', 'Date of birth'],
   ['relationship', 'Relationship'],
-  ['share_percent', 'Share of account (%)'],
+  ['share_percent', 'Share of the account'],
 ] as const;
 
 interface Props {
@@ -78,7 +78,7 @@ export default function BeneficiaryCard({ caseState, beneficiary: b, files, onFi
                   sx={{ border: `1px solid ${bad ? t.fail : t.rule}`, bgcolor: bad ? '#FFF7F6' : t.panel, borderRadius: 1, px: 1.25, py: 0.75 }}>
                   <Box sx={{ fontSize: 11.5, color: bad ? t.failText : t.muted }}>{label}</Box>
                   <Box sx={{ fontSize: 14, fontWeight: 500, color: f.value == null ? t.muted : bad ? t.failText : t.ink }}>
-                    {f.value == null ? 'Unreadable' : f.value}
+                    {f.value == null ? 'Unreadable' : plainValue(name, f.value)}
                   </Box>
                 </Box>
               );
