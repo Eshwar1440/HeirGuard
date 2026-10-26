@@ -6,6 +6,8 @@ explain_issues -> await_heir_fix (pause) -> read_documents | build_case_graph | 
 await_approval (pause, estate ops) -> simulate (M4) | await_heir_fix
 simulate (pauses for the heir's inputs if none yet) -> write_summary (M5 + M6) -> await_choice (pause)
 await_choice -> prefill (M7) | handoff | transfer_request | simulate (new inputs)
+prefill | handoff | transfer_request -> await_choice: the heir can change their mind at any time,
+so a transfer out is never held up by an earlier choice.
 
 Every routing function is plain Python over the state. No LLM decides a transition.
 The state holds only JSON values, so any checkpointer can store it. Nodes that pause
@@ -21,7 +23,7 @@ from dataclasses import asdict
 from decimal import Decimal, InvalidOperation
 from typing import Annotated, Any, Literal, Optional, TypedDict
 
-from langgraph.graph import END, START, StateGraph
+from langgraph.graph import START, StateGraph
 from langgraph.types import interrupt
 from pydantic import BaseModel, Field, model_validator
 
@@ -30,6 +32,7 @@ from hg.checker import run_checks
 from hg.config import get_settings
 from hg.flow import files
 from hg.graph import build_case_graph as write_case_graph
+from hg.graph import write_prefill
 from hg.graph.resolve import field_value, link_applications
 from hg.prefill import build_handoff
 from hg.reader import read_document
@@ -344,16 +347,30 @@ def prefill(state: FlowState) -> dict:
             "audit": [_log(case.case_id, "prefill", "prefilled", summary)]}
 
 
+def _withdraw_prefill(case: CaseState, heir_id: Optional[str]) -> tuple[CaseState, list[dict]]:
+    """A later talk or transfer choice withdraws a proposed application."""
+    if not case.prefill:
+        return case, []
+    if heir_id:
+        write_prefill(case.case_id, heir_id, [])
+    note = _log(case.case_id, "await_choice", "prefill_withdrawn", "The proposed application was withdrawn.")
+    return case.model_copy(update={"prefill": []}), [note]
+
+
 def handoff(state: FlowState) -> dict:
-    case = _case(state).model_copy(update={"status": "handed_off"})
-    return {"case": _dump(case), "audit": [_log(case.case_id, "handoff", "handed_off",
-            "Heir chose to talk to a professional. No account action taken.")]}
+    case, entries = _withdraw_prefill(_case(state), state.get("heir_id"))
+    case = case.model_copy(update={"status": "handed_off"})
+    entries.append(_log(case.case_id, "handoff", "handed_off",
+                        "Heir chose to talk to a professional. No account action taken."))
+    return {"case": _dump(case), "handoff": None, "audit": entries}
 
 
 def transfer_request(state: FlowState) -> dict:
-    case = _case(state).model_copy(update={"status": "transfer_requested"})
-    return {"case": _dump(case), "audit": [_log(case.case_id, "transfer_request", "transfer_requested",
-            "Heir chose to transfer out. Request recorded (mock); nothing blocks it.")]}
+    case, entries = _withdraw_prefill(_case(state), state.get("heir_id"))
+    case = case.model_copy(update={"status": "transfer_requested"})
+    entries.append(_log(case.case_id, "transfer_request", "transfer_requested",
+                        "Heir chose to transfer out. Request recorded (mock); nothing blocks it."))
+    return {"case": _dump(case), "handoff": None, "audit": entries}
 
 
 # --- Routing (plain Python) -----------------------------------------------------------
@@ -401,6 +418,6 @@ def build_flow(checkpointer):
     g.add_edge("simulate", "write_summary")
     g.add_edge("write_summary", "await_choice")
     g.add_conditional_edges("await_choice", route_after_choice)
-    for end in ("prefill", "handoff", "transfer_request"):
-        g.add_edge(end, END)
+    for chosen in ("prefill", "handoff", "transfer_request"):
+        g.add_edge(chosen, "await_choice")
     return g.compile(checkpointer=checkpointer)

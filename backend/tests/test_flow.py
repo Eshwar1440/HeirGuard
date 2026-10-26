@@ -106,7 +106,7 @@ def test_best_case_runs_straight_through(flow):
     assert view.simulation["beneficiary_id"] == view.heir_id and view.simulation["tax_year"] == 2026
 
     view = service.choose(case_id, "keep", opt_in_rmd_deposit=True)
-    assert view.case.status == "prefilled" and view.waiting_for is None
+    assert view.case.status == "prefilled" and view.waiting_for == "choice"  # the choice stays open
     sourced = [f for f in view.case.prefill if f.source_document_id]
     assert len(sourced) == 7 and view.handoff.excluded == []
     assert {f.source_document_id for f in sourced} <= {d.id for d in view.case.documents}
@@ -183,6 +183,25 @@ def test_talk_and_transfer_are_equal_choices(flow, choice, status):
     service.simulate(case_id, INPUTS)
     view = service.choose(case_id, choice)
     assert view.case.status == status and view.case.prefill == []
+
+
+def test_heir_can_switch_from_keep_to_transfer(flow):
+    case_id = service.create_case("packet_01_fixed").case.case_id
+    service.approve(case_id)
+    service.simulate(case_id, INPUTS)
+    view = service.choose(case_id, "keep")
+    assert view.case.prefill and view.handoff is not None
+    heir = view.heir_id
+
+    view = service.choose(case_id, "transfer")
+    assert view.case.status == "transfer_requested" and view.case.choice == "transfer"
+    assert view.case.prefill == [] and view.handoff is None and view.waiting_for == "choice"
+    assert "prefill_withdrawn" in _actions(case_id)
+    rows = store.run("MATCH (p:PrefillField {case_id: $cid, beneficiary_id: $bid}) RETURN count(p) AS n",
+                     cid=case_id, bid=heir)
+    assert rows[0]["n"] == 0
+
+    assert service.choose(case_id, "keep").case.status == "prefilled"
 
 
 def test_new_inputs_at_the_choice_simulate_again(flow):
