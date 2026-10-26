@@ -61,6 +61,7 @@ class FlowState(TypedDict, total=False):
     handoff: Optional[dict]
     last_fix: Optional[dict]
     last_decision: Optional[dict]
+    sample_id: Optional[str]  # demo cases only: the packet behind the case
 
 
 # --- Resume payloads -----------------------------------------------------------------
@@ -352,6 +353,11 @@ def transfer_request(state: FlowState) -> dict:
 # --- Routing (plain Python) -----------------------------------------------------------
 
 
+def route_after_intake(state: FlowState) -> Literal["read_documents", "await_heir_fix"]:
+    """A case opened without documents waits for the heir's upload; nothing is checked yet."""
+    return "read_documents" if state.get("pending_uploads") or _case(state).documents else "await_heir_fix"
+
+
 def route_after_check(state: FlowState) -> Literal["explain_issues", "await_approval"]:
     return "explain_issues" if _open(_case(state)) else "await_approval"
 
@@ -382,7 +388,7 @@ def build_flow(checkpointer):
                  await_approval, simulate, write_summary, await_choice, prefill, handoff, transfer_request):
         g.add_node(node.__name__, node)
     g.add_edge(START, "intake")
-    g.add_edge("intake", "read_documents")
+    g.add_conditional_edges("intake", route_after_intake)
     g.add_edge("read_documents", "build_case_graph")
     g.add_edge("build_case_graph", "check_packet")
     g.add_conditional_edges("check_packet", route_after_check)
