@@ -32,6 +32,7 @@ from hg import audit
 from hg.checker import run_checks
 from hg.config import get_settings
 from hg.flow import files
+from hg.flow.records import match_records
 from hg.graph import build_case_graph as write_case_graph
 from hg.graph import write_prefill
 from hg.graph.resolve import field_value, link_applications
@@ -186,7 +187,13 @@ def read_documents(state: FlowState) -> dict:
     docs, replaced = supersede(case, new_docs)
     entries += [_log(case.case_id, "read_documents", "replaced", f"{n} was replaced by a newer upload.") for n in replaced]
     case = case.model_copy(update={"documents": docs, "status": "reading_documents"})
-    return {"case": _dump(case), "pending_uploads": [], "audit": entries}
+    update: dict = {}
+    if case.decedent is None and (found := match_records(case)):
+        record_id, case = found
+        update["heir_id"] = case.beneficiaries[0].id if case.beneficiaries else None
+        entries.append(_log(case.case_id, "read_documents", "records_matched",
+                            f"Matched the death certificate to the account on file ({record_id})."))
+    return {"case": _dump(case), "pending_uploads": [], "audit": entries, **update}
 
 
 def supersede(case: CaseState, new_docs: list[Document]) -> tuple[list[Document], list[str]]:
