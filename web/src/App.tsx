@@ -59,9 +59,19 @@ export default function App() {
               aria-hidden
               sx={{ width: 36, height: 36, objectFit: 'contain' }}
             />
-            <Typography component="h1" sx={{ fontFamily: t.serif, fontSize: 21, fontWeight: 600, whiteSpace: 'nowrap' }}>{APP_NAME}</Typography>
+            <Stack spacing={0.1} sx={{ whiteSpace: 'nowrap' }}>
+              <Typography
+                component="h1"
+                sx={{ color: '#fff', fontSize: 17, fontWeight: 650, letterSpacing: 1.4, lineHeight: 1.1 }}
+              >
+                {APP_NAME.toUpperCase()}
+              </Typography>
+              <Typography sx={{ color: '#9FC7EC', fontSize: 9.5, fontWeight: 600, letterSpacing: 1.65, lineHeight: 1.2 }}>
+                INHERITED SERVICES · CONCEPT
+              </Typography>
+            </Stack>
             <Box sx={{ width: '1px', height: 22, bgcolor: 'rgba(255,255,255,.25)' }} />
-            <Typography sx={{ fontSize: 13, color: '#C9D6E3', whiteSpace: 'nowrap' }}>Inherited account guide</Typography>
+            <Typography sx={{ fontSize: 13, color: '#C9D6E3', whiteSpace: 'nowrap' }}>A guided account transition experience</Typography>
           </Stack>
           <Button onClick={() => setDrawerOpen((o) => !o)} data-testid="toggle-under-the-hood" aria-pressed={drawerOpen}
             sx={{ color: '#fff', border: '1px solid rgba(255,255,255,.3)', pl: 1.5, pr: 0.5, '&:hover': { bgcolor: 'rgba(255,255,255,.08)' } }}>
