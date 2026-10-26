@@ -42,18 +42,21 @@ account. The input is JSON from a rule check: rule_id, status (fail or needs_rev
 
 Write one or two short sentences: what is wrong and how to fix it. For example: "Your upload looks like a \
 photocopy. Schwab needs a certified copy, which you can order from the county that issued it."
+The reader cannot type over a value. The fix is always to upload a corrected or missing document; an item that \
+only needs a second look can also be sent to estate operations for review.
 {_COMMON_RULES}"""
 
 OPTIONS_SYSTEM = f"""You summarize withdrawal options for a person who inherited an IRA. The input is JSON: the \
 scenarios a calculator produced, the IRS rule that applies, and the heir's own inputs.
 
-Write a short, neutral comparison as 4 to 6 points, one per line, each line starting with "- ".
-Each point is one short sentence.
-- Name each scenario by its label with its estimated total tax and the amount kept after tax.
-- State the one rule that applies: the deadline (rule.deadline_date) and whether a minimum must be taken \
+Write a short, neutral comparison as points, one per line, each line starting with "- ". Keep every point \
+under 15 words. Write the points in this order:
+- One point per scenario, exactly in this form: "<label>: <total_tax> in tax, you keep <after_tax_total>." \
+with both amounts as dollars.
+- One point for the rule that applies: the deadline (rule.deadline_date) and whether a minimum must be taken \
 each year (rule.annual_minimums_required).
-- Say that the tax figures are estimates based on your own inputs and the current federal brackets, and that \
-a tax professional can help with the decision.
+- One point saying these are estimates from your own inputs and the current federal brackets, and a tax \
+professional can help you decide.
 - Do not rank the options as better or worse for the reader.
 {_COMMON_RULES}"""
 
