@@ -147,21 +147,16 @@ def test_flawed_case_is_caught_fixed_and_finished(flow):
 # --- Other paths -----------------------------------------------------------------------
 
 
-def test_flawed_case_fixed_by_a_field_correction(flow):
-    view = service.create_case("packet_01_flawed")
-    case_id = view.case.case_id
-    b2_app = next(d for d in view.case.documents if d.file_ref.endswith("inherited_ira_application_b2.pdf"))
-    view = service.correct_field(case_id, "share_percent", b2_app.id, "50")
-    assert view.waiting_for == "approval"
-    assert "corrected" in _actions(case_id)
-
-
-def test_names_cannot_be_edited_only_reuploaded(flow):
-    view = service.create_case("packet_01_flawed")
-    doc = view.case.documents[0]
-    with pytest.raises(FlowError) as exc:
-        service.correct_field(view.case.case_id, "beneficiary_name", doc.id, "Someone Else")
-    assert exc.value.status_code == 409 and "upload a corrected document" in str(exc.value)
+def test_extracted_values_cannot_be_edited(flow):
+    """A wrong value is fixed only by uploading a corrected document; there is no edit route."""
+    client = TestClient(__import__("api.main", fromlist=["app"]).app)
+    case = client.post("/cases", json={"sample_id": "packet_01_flawed"}).json()
+    doc = case["case"]["documents"][0]
+    r = client.patch(f"/cases/{case['case']['case_id']}/fields/share_percent",
+                     json={"document_id": doc["id"], "value": "50"})
+    assert r.status_code in (404, 405)
+    assert not hasattr(service, "correct_field")
+    assert "/cases/{case_id}/fields/{field}" not in client.get("/openapi.json").json()["paths"]
 
 
 def test_submit_for_review_is_refused_while_a_check_fails(flow):

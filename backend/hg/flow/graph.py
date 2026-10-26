@@ -2,7 +2,7 @@
 
 intake -> read_documents (M2) -> build_case_graph (M3) -> check_packet (M3)
 check_packet -> explain_issues (M5 + M6) if any check is not "pass", else await_approval
-explain_issues -> await_heir_fix (pause) -> read_documents | build_case_graph | await_approval
+explain_issues -> await_heir_fix (pause) -> read_documents (new uploads) | await_approval
 await_approval (pause, estate ops) -> simulate (M4) | await_heir_fix
 simulate (pauses for the heir's inputs if none yet) -> write_summary (M5 + M6) -> await_choice (pause)
 await_choice -> prefill (M7) | handoff | transfer_request | simulate (new inputs)
@@ -10,6 +10,7 @@ prefill | handoff | transfer_request -> await_choice: the heir can change their 
 so a transfer out is never held up by an earlier choice.
 
 Every routing function is plain Python over the state. No LLM decides a transition.
+Extracted values are never edited: a wrong value is fixed by uploading a corrected document.
 The state holds only JSON values, so any checkpointer can store it. Nodes that pause
 call interrupt() before any side effect, because a resumed node runs again from the top.
 """
@@ -65,15 +66,8 @@ class FlowState(TypedDict, total=False):
 # --- Resume payloads -----------------------------------------------------------------
 
 
-class Correction(BaseModel):
-    document_id: str
-    field: str
-    value: str
-
-
 class HeirFix(BaseModel):
     uploads: list[str] = Field(default_factory=list, description="file refs of new uploads")
-    corrections: list[Correction] = Field(default_factory=list)
     submit_for_review: bool = False
 
 
@@ -135,7 +129,7 @@ def sync_shares(case: CaseState) -> tuple[CaseState, list[str]]:
     """Each beneficiary's share follows the share on their own application.
 
     In this prototype the applications are where shares are declared, so a corrected
-    application (or a corrected field) must change the designation the checker sees.
+    application must change the designation the checker sees.
     """
     links = link_applications(case)
     notes, beneficiaries = [], []
@@ -152,23 +146,6 @@ def sync_shares(case: CaseState) -> tuple[CaseState, list[str]]:
             b = b.model_copy(update={"share_percent": share})
         beneficiaries.append(b)
     return case.model_copy(update={"beneficiaries": beneficiaries}), notes
-
-
-def apply_corrections(case: CaseState, corrections: list[Correction]) -> tuple[CaseState, list[str]]:
-    threshold = get_settings().confidence_threshold
-    docs = {d.id: d for d in case.documents}
-    notes = []
-    for c in corrections:
-        doc = docs[c.document_id]
-        fields = []
-        for f in doc.fields:
-            if f.name == c.field:
-                notes.append(f"Heir corrected {c.field} on the {doc.doc_type} from {f.value!r} to {c.value!r}.")
-                f = f.model_copy(update={"value": c.value, "confidence": 1.0})
-            fields.append(f)
-        needs_review = any(f.value is None or f.confidence < threshold for f in fields)
-        docs[doc.id] = doc.model_copy(update={"fields": fields, "needs_review": needs_review})
-    return case.model_copy(update={"documents": [docs[d.id] for d in case.documents]}), notes
 
 
 # --- Nodes ----------------------------------------------------------------------------
@@ -262,8 +239,7 @@ def explain_issues(state: FlowState) -> dict:
 def await_heir_fix(state: FlowState) -> dict:
     case = _case(state)
     fix = HeirFix.model_validate(interrupt({"kind": HEIR_FIX, "open_checks": len(_open(case))}))
-    case, notes = apply_corrections(case, fix.corrections)
-    entries = [_log(case.case_id, "await_heir_fix", "corrected", n) for n in notes]
+    entries = []
     if fix.uploads:
         entries.append(_log(case.case_id, "await_heir_fix", "uploaded", f"Heir uploaded {len(fix.uploads)} file(s)."))
     if fix.submit_for_review:
@@ -380,12 +356,10 @@ def route_after_check(state: FlowState) -> Literal["explain_issues", "await_appr
     return "explain_issues" if _open(_case(state)) else "await_approval"
 
 
-def route_after_fix(state: FlowState) -> Literal["read_documents", "build_case_graph", "await_approval", "await_heir_fix"]:
+def route_after_fix(state: FlowState) -> Literal["read_documents", "await_approval", "await_heir_fix"]:
     fix = HeirFix.model_validate(state.get("last_fix") or {})
     if fix.uploads:
         return "read_documents"
-    if fix.corrections:
-        return "build_case_graph"
     if fix.submit_for_review and not any(c.status == "fail" for c in _case(state).checks):
         return "await_approval"
     return "await_heir_fix"

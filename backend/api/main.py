@@ -35,11 +35,6 @@ class NewCase(BaseModel):
     beneficiary_id: Optional[str] = None
 
 
-class FieldCorrection(BaseModel):
-    document_id: str
-    value: str
-
-
 class ApprovalBody(BaseModel):
     approved: bool = True
     note: str = ""
@@ -69,11 +64,6 @@ def create_case(body: NewCase) -> CaseView:
 async def upload_documents(case_id: str, files: list[UploadFile] = File(...)) -> CaseView:
     uploads = [(f.filename or "upload", await f.read(), f.content_type or "application/octet-stream") for f in files]
     return service.add_documents(case_id, uploads)
-
-
-@app.patch("/cases/{case_id}/fields/{field}")
-def correct_field(case_id: str, field: str, body: FieldCorrection) -> CaseView:
-    return service.correct_field(case_id, field, body.document_id, body.value)
 
 
 @app.post("/cases/{case_id}/submit-for-review")
