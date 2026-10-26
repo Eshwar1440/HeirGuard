@@ -54,10 +54,10 @@ export default function App() {
           <Stack direction="row" spacing={1.75} sx={{ alignItems: 'center' }}>
             <Box
               component="img"
-              src="/heirguard-icon-reversed.png"
+              src="/heirguard-mark-reversed.svg?v=2"
               alt=""
               aria-hidden
-              sx={{ width: 36, height: 36, objectFit: 'contain' }}
+              sx={{ width: 34, height: 34, objectFit: 'contain' }}
             />
             <Stack spacing={0.1} sx={{ whiteSpace: 'nowrap' }}>
               <Typography
