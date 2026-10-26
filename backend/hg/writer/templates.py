@@ -11,26 +11,25 @@ from hg.schemas import CheckResult
 
 SCENARIO_LABELS: dict[str, str] = {
     "lump_sum_now": "Lump sum now",
-    "minimums_then_balloon": "Yearly minimums, with the rest in the final year",
+    "minimums_then_balloon": "Minimums, rest at the end",
     "even_spread": "Even spread",
     "fill_bracket": "Fill your tax bracket",
 }
 
 ISSUE_FIXES: dict[str, str] = {
     "required_docs_present": "Upload the missing documents, then press Re-check.",
-    "shares_total_100": "Check the share on each beneficiary's application and correct any that were misread.",
-    "name_match": "If these are the same person, confirm it. If a form has a misspelled name, correct it or "
-    "upload a corrected form.",
-    "dod_consistent": "Check the date on each form against the death certificate, then correct the one that "
-    "differs or upload a corrected form.",
+    "shares_total_100": "Upload a corrected application so the shares add up to the full account.",
+    "name_match": "If a form has a misspelled name, upload a corrected form. If it is the same person, "
+    "send it for review.",
+    "dod_consistent": "Upload a corrected form so its date matches the death certificate.",
     "certified_copy": "You can order a certified copy from the vital records office in the county that issued "
     "the certificate, then upload it.",
-    "field_review": "Check these values against your documents and correct any that are wrong.",
+    "field_review": "If a value was read wrong, upload a clearer or corrected copy of that document.",
 }
 DEFAULT_FIX = "Check this item and upload a corrected document if needed."
 
 DISCLAIMER = (
-    "These tax figures are estimates based on your own inputs and the current federal brackets. "
+    "These are estimates from your own inputs and the current federal brackets. "
     "A tax professional can help you decide."
 )
 
@@ -44,16 +43,11 @@ def issue_text(check: CheckResult) -> str:
 
 
 def options_text(payload: dict) -> str:
-    """Neutral comparison from the summarize_options payload (see writer.write)."""
-    scenarios = payload["scenarios"]
-    parts = []
-    if scenarios:
-        parts.append(f"Here is how the {len(scenarios)} options compare, using your inputs.")
-        for s in scenarios:
-            parts.append(
-                f"{s['label']}: estimated total tax {money(s['total_tax'])}, "
-                f"and {money(s['after_tax_total'])} kept after tax."
-            )
-    parts.append(payload["rule"]["summary"])
-    parts.append(DISCLAIMER)
-    return " ".join(parts)
+    """Neutral comparison from the summarize_options payload (see writer.write), one point per line."""
+    points = [
+        f"{s['label']}: {money(s['total_tax'])} in tax, you keep {money(s['after_tax_total'])}."
+        for s in payload["scenarios"]
+    ]
+    points.append(payload["rule"]["summary"])
+    points.append(DISCLAIMER)
+    return "\n".join(f"- {p}" for p in points)

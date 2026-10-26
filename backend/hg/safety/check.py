@@ -142,7 +142,7 @@ def advice_reasons(text: str) -> list[str]:
     cleaned = _clean(text)
     reasons = [f'advice phrase "{phrase}"' for phrase, pattern in _ADVICE if pattern.search(cleaned)]
     for clause in re.split(r"[.!?;:,\n]", cleaned):
-        clause = _LEADERS.sub("", clause.strip(" \"'()"))
+        clause = _LEADERS.sub("", clause.strip(" \"'()-*•"))  # also bullet markers
         match = _IMPERATIVE.match(clause)
         if match:
             reasons.append(f'recommends a scenario: "{match.group(0)}"')
