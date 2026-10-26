@@ -33,6 +33,7 @@ def flow_error(_: Request, exc: FlowError) -> JSONResponse:
 class NewCase(BaseModel):
     sample_id: Optional[str] = None
     beneficiary_id: Optional[str] = None
+    with_documents: bool = True
 
 
 class ApprovalBody(BaseModel):
@@ -57,13 +58,19 @@ def samples() -> list[Sample]:
 
 @app.post("/cases")
 def create_case(body: NewCase) -> CaseView:
-    return service.create_case(body.sample_id, body.beneficiary_id)
+    return service.create_case(body.sample_id, body.beneficiary_id, body.with_documents)
 
 
 @app.post("/cases/{case_id}/documents")
 async def upload_documents(case_id: str, files: list[UploadFile] = File(...)) -> CaseView:
     uploads = [(f.filename or "upload", await f.read(), f.content_type or "application/octet-stream") for f in files]
     return service.add_documents(case_id, uploads)
+
+
+@app.post("/cases/{case_id}/sample-documents")
+def sample_documents(case_id: str) -> CaseView:
+    """Demo only (under the hood): read the case's sample packet as if the heir uploaded it."""
+    return service.load_sample_documents(case_id)
 
 
 @app.post("/cases/{case_id}/submit-for-review")

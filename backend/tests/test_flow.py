@@ -260,3 +260,22 @@ def test_api_demo_path(flow):
     pdf = client.get(f"/cases/{case_id}/documents/{doc_id}/file")
     assert pdf.status_code == 200 and pdf.content[:4] == b"%PDF"
     assert client.post(f"/cases/{case_id}/approve").status_code == 409
+
+
+def test_case_opened_without_documents_waits_for_an_upload(flow):
+    view = service.create_case("packet_01_fixed", with_documents=False)
+    case_id = view.case.case_id
+    assert view.waiting_for == "heir_fix" and view.case.documents == [] and view.case.checks == []
+    assert flow == []  # nothing read yet
+    with pytest.raises(FlowError, match="upload the documents first"):
+        service.submit_for_review(case_id)
+
+    view = service.load_sample_documents(case_id)
+    assert view.waiting_for == "approval" and len(view.case.documents) == 3
+
+
+def test_heir_upload_opens_a_case_without_documents(flow):
+    case_id = service.create_case("packet_01_flawed", with_documents=False).case.case_id
+    uploads = [(p.name, p.read_bytes(), "application/pdf") for p in sorted((PACKETS / "packet_01_flawed").glob("*.pdf"))]
+    view = service.add_documents(case_id, uploads)
+    assert view.waiting_for == "heir_fix" and {c.rule_id for c in view.case.checks if c.status != "pass"} == {"shares_total_100"}
