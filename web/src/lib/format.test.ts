@@ -56,3 +56,17 @@ describe('labels', () => {
   });
   it('humanizes field names', () => expect(fieldLabel('share_percent')).toBe('Share percent'));
 });
+
+describe('plain labels and values', () => {
+  it('never shows raw field names or codes to the heir', async () => {
+    const { plainLabel, plainValue } = await import('./format');
+    expect(plainLabel('share_percent')).toBe('Your share');
+    expect(plainLabel('account_type')).toBe('Account type');
+    expect(plainValue('account_type', 'traditional_ira')).toBe('Traditional IRA');
+    expect(plainValue('share_percent', '50')).toBe('50%');
+    expect(plainValue('beneficiary_date_of_birth', '1973-05-02')).toBe('May 2, 1973');
+    expect(plainValue('relationship', 'child')).toBe('Child');
+    expect(plainValue('beneficiary_name', 'Mackenzie Hernandez')).toBe('Mackenzie Hernandez');
+    expect(plainValue('share_percent', null)).toBe('—');
+  });
+});

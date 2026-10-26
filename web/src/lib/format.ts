@@ -72,3 +72,37 @@ export function fieldLabel(name: string): string {
   const s = name.replace(/_/g, ' ');
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
+
+/** Plain labels for fields the heir sees (the under-the-hood views keep the raw names). */
+export const FIELD_LABELS: Record<string, string> = {
+  beneficiary_name: 'Your name',
+  beneficiary_date_of_birth: 'Date of birth',
+  relationship: 'Relationship to the owner',
+  decedent_name: 'Account owner',
+  decedent_date_of_death: 'Date of death',
+  date_of_death: 'Date of death',
+  account_type: 'Account type',
+  share_percent: 'Your share',
+  beneficiary_ssn: 'Social Security number',
+  linked_brokerage_account_number: 'Linked brokerage account number',
+};
+export const plainLabel = (name: string) => FIELD_LABELS[name] ?? fieldLabel(name);
+
+export const ACCOUNT_TYPE_LABELS: Record<string, string> = {
+  traditional_ira: 'Traditional IRA',
+  roth_ira: 'Roth IRA',
+  tod_brokerage: 'Transfer-on-death brokerage',
+  joint: 'Joint',
+  individual: 'Individual',
+  trust_owned: 'Trust-owned',
+};
+
+/** A stored value as the heir should read it: dates in words, shares as percents, words capitalized. */
+export function plainValue(name: string, value: string | null | undefined): string {
+  if (value == null || value === '') return '—';
+  if (name.includes('date')) return formatDate(value);
+  if (name === 'share_percent') return formatPercent(value);
+  if (name === 'account_type') return ACCOUNT_TYPE_LABELS[value] ?? value.replace(/_/g, ' ');
+  if (name === 'relationship' || name === 'designation') return value.charAt(0).toUpperCase() + value.slice(1);
+  return value;
+}
