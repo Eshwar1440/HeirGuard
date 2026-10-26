@@ -1,0 +1,100 @@
+import { createTheme } from '@mui/material/styles';
+
+export const tokens = {
+  navy: '#0B2240',
+  navyPanel: '#122E52',
+  accent: '#1F6FC5',
+  accentTint: '#E8F1FB',
+  accentBorder: '#BBD5F1',
+  accentText: '#123F73',
+  ink: '#1A2533',
+  body: '#3E4C5C',
+  muted: '#5A6878',
+  disabled: '#8A97A6',
+  canvas: '#F3F5F7',
+  panel: '#F8FAFB',
+  band: '#F4F8FB',
+  rule: '#D8DEE6',
+  inputBorder: '#C3CCD6',
+  rowRule: '#EEF1F4',
+  pass: '#1E7A46',
+  passTint: '#E8F4EC',
+  passText: '#14532D',
+  fail: '#B42318',
+  failTint: '#FDECEA',
+  failBorder: '#F1B8B1',
+  failText: '#8A1C12',
+  amber: '#B7791F',
+  amberBar: '#C98A2B',
+  amberTint: '#FBF0DC',
+  amberText: '#7A4A00',
+  callout: '#FBF7EE',
+  calloutBorder: '#EADFC6',
+  serif: '"Source Serif 4", Georgia, serif',
+  sans: '"IBM Plex Sans", system-ui, sans-serif',
+  mono: '"IBM Plex Mono", ui-monospace, monospace',
+} as const;
+
+const t = tokens;
+
+export const theme = createTheme({
+  palette: {
+    primary: { main: t.navy, contrastText: '#fff' },
+    secondary: { main: t.accent, contrastText: '#fff' },
+    success: { main: t.pass },
+    error: { main: t.fail },
+    warning: { main: t.amber },
+    background: { default: t.canvas, paper: '#fff' },
+    text: { primary: t.ink, secondary: t.muted },
+    divider: t.rule,
+  },
+  shape: { borderRadius: 4 },
+  typography: {
+    fontFamily: t.sans,
+    h1: { fontFamily: t.serif, fontWeight: 600, fontSize: 28, color: t.navy },
+    h2: { fontFamily: t.serif, fontWeight: 600, fontSize: 24, color: t.navy },
+    h3: { fontFamily: t.serif, fontWeight: 600, fontSize: 19, color: t.navy },
+    subtitle1: { fontSize: 15, fontWeight: 600, color: t.navy },
+    body1: { fontSize: 14.5, lineHeight: 1.55 },
+    body2: { fontSize: 13.5, lineHeight: 1.5, color: t.body },
+    caption: { fontSize: 12, color: t.muted },
+    overline: { fontSize: 12, fontWeight: 600, letterSpacing: 0.6, lineHeight: 1.4, color: t.muted },
+    button: { textTransform: 'none', fontWeight: 500, fontSize: 14 },
+  },
+  components: {
+    MuiCssBaseline: { styleOverrides: { body: { WebkitFontSmoothing: 'antialiased' } } },
+    MuiAppBar: { defaultProps: { elevation: 0, color: 'primary' }, styleOverrides: { root: { borderBottom: `3px solid ${t.accent}` } } },
+    MuiCard: { defaultProps: { variant: 'outlined' }, styleOverrides: { root: { borderRadius: 6, borderColor: t.rule } } },
+    MuiButton: {
+      defaultProps: { disableElevation: true },
+      styleOverrides: { root: { whiteSpace: 'nowrap', borderRadius: 4 }, outlined: { borderWidth: 1.5, '&:hover': { borderWidth: 1.5 } } },
+    },
+    MuiChip: { styleOverrides: { root: { fontWeight: 600, fontSize: 12 }, sizeSmall: { height: 22 } } },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: { backgroundColor: '#fff', fontSize: 14, '& .MuiOutlinedInput-notchedOutline': { borderColor: t.inputBorder } },
+        input: { padding: '9px 10px' },
+      },
+    },
+    MuiInputLabel: { defaultProps: { shrink: true } },
+    MuiTab: { styleOverrides: { root: { textTransform: 'none', minHeight: 40, fontSize: 13, fontWeight: 500, padding: '8px 10px', minWidth: 0 } } },
+    MuiTabs: { styleOverrides: { root: { minHeight: 40 }, indicator: { backgroundColor: t.accent, height: 2 } } },
+    MuiTableCell: {
+      styleOverrides: {
+        root: { fontSize: 13, padding: '7px 12px', borderColor: t.rowRule, fontVariantNumeric: 'tabular-nums' },
+        head: { backgroundColor: t.navy, color: '#fff', fontSize: 12, fontWeight: 600, letterSpacing: 0.3 },
+      },
+    },
+    MuiStepIcon: {
+      styleOverrides: {
+        root: { width: 28, height: 28, color: '#fff', border: `1.5px solid ${t.inputBorder}`, borderRadius: '50%',
+          '& .MuiStepIcon-text': { fill: t.muted, fontWeight: 600 },
+          '&.Mui-active': { color: t.navy, borderColor: t.navy, '& .MuiStepIcon-text': { fill: '#fff' } },
+          '&.Mui-completed': { color: t.accent, borderColor: t.accent } },
+      },
+    },
+    MuiStepConnector: { styleOverrides: { line: { borderTopWidth: 2, borderColor: t.rule } } },
+    MuiDialog: { styleOverrides: { paper: { borderRadius: 6, boxShadow: '0 20px 50px rgba(15,39,66,.3)' } } },
+    MuiLinearProgress: { styleOverrides: { root: { height: 6, borderRadius: 3, backgroundColor: '#E6EBF0' }, bar: { borderRadius: 3 } } },
+  },
+});
