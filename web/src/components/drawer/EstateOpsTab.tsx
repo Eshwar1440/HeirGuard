@@ -34,15 +34,15 @@ export default function EstateOpsTab({ caseState }: { caseState: CaseState }) {
         ['Approved', caseState.approved ? 'yes' : 'no'],
       ]} />
       <Button variant="contained" color="secondary" size="large" disabled={!can || approve.isPending} onClick={() => approve.mutate()} data-testid="approve">
-        {caseState.approved ? 'Approved' : approve.isPending ? 'Approving…' : 'Approve packet'}
+        {caseState.approved ? 'Approved' : approve.isPending ? 'Approving…' : 'Approve case'}
       </Button>
       {can && (
         <Stack spacing={1} sx={{ border: `1px solid ${t.rule}`, borderRadius: 1, p: 1.5 }}>
-          <TextField label="Reason for returning (the heir sees this)" size="small" multiline minRows={2} value={reason}
+          <TextField label="Reason" size="small" multiline minRows={2} value={reason}
             onChange={(e) => setReason(e.target.value)} slotProps={{ htmlInput: { 'data-testid': 'return-reason' } }} />
           <Button variant="outlined" color="error" disabled={!reason.trim() || approve.isPending} data-testid="return-to-heir"
             onClick={() => approve.mutate({ approved: false, note: reason.trim() }, { onSuccess: () => setReason('') })}>
-            Return to heir
+            Deny case
           </Button>
         </Stack>
       )}
