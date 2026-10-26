@@ -18,6 +18,10 @@ from hg.schemas import BeneficiaryClass, Beneficiary, Decedent
 #: 26 CFR 1.401(a)(9)-4(e)(3): an individual reaches the age of majority on their 21st birthday.
 AGE_OF_MAJORITY = 21
 
+#: Pub. 590-B: the 10-year rule applies when "the IRA owner dies in a tax year beginning
+#: after December 31, 2019". Earlier deaths follow older rules and need a specialist.
+FIRST_SECURE_DEATH_YEAR = 2020
+
 ENTITY_RELATIONSHIPS = frozenset({"estate", "trust", "charity", "entity", "organization"})
 
 
@@ -129,11 +133,20 @@ _SUMMARIES = {
 
 
 def rule_summary(beneficiary: Beneficiary, decedent: Decedent, account_type: str) -> RuleSummary:
+    if beneficiary.date_of_birth > decedent.date_of_death:
+        raise ValueError("the beneficiary's date of birth is after the owner's date of death")
     klass = beneficiary.beneficiary_class or classify(beneficiary, decedent)
     after_rbd = died_on_or_after_rbd(decedent)
     annual = annual_rmds_required(account_type, decedent)
-    deadline = None if klass == "entity" else deadline_year(decedent)
-    if klass == "designated":
+    pre_secure = decedent.date_of_death.year < FIRST_SECURE_DEATH_YEAR
+    specialist = klass == "entity" or pre_secure
+    deadline = None if specialist else deadline_year(decedent)
+    if pre_secure:
+        summary = (
+            "The owner died before 2020, so older inherited IRA rules apply. These need a specialist, "
+            "so no scenarios are shown."
+        )
+    elif klass == "designated":
         summary = f"The account must be empty by December 31, {deadline}."
         summary += (
             " You must also take a minimum amount each year before then."
@@ -143,9 +156,9 @@ def rule_summary(beneficiary: Beneficiary, decedent: Decedent, account_type: str
         summary = _SUMMARIES[klass]
     return RuleSummary(
         beneficiary_class=klass,
-        needs_specialist=klass == "entity",
+        needs_specialist=specialist,
         deadline_year=deadline,
-        annual_rmds_required=annual and klass != "entity",
+        annual_rmds_required=annual and not specialist,
         died_on_or_after_rbd=after_rbd,
         required_beginning_date=required_beginning_date(decedent.date_of_birth),
         year_of_death_rmd_may_be_due=after_rbd and account_type == "traditional_ira",
