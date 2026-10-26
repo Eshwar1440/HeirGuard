@@ -6,7 +6,7 @@ import { heirOf, optionsSummary } from '../lib/case';
 import { FILING_LABELS, formatMoney, formatPercent } from '../lib/format';
 import ScenarioChart from './ScenarioChart';
 import ScheduleTable from './ScheduleTable';
-import { Banner, ErrorCard, HypotheticalChip, Placeholder, SectionHeader } from './common';
+import { Banner, ErrorCard, Placeholder, SectionHeader } from './common';
 import { tokens as t } from '../theme';
 
 interface Props { caseState: CaseState; chartVariant?: 'grouped' | 'stacked' }
@@ -26,6 +26,8 @@ export default function OptionsSection({ caseState, chartVariant }: Props) {
 
   const scenarios = caseState.scenarios ?? [];
   const summary = optionsSummary(caseState)?.text;
+  // The writer (M5) puts one point per line, each starting with "- ".
+  const points = (summary ?? '').split('\n').map((l) => l.trim().replace(/^[-•*]\s*/, '')).filter(Boolean);
   useEffect(() => {
     if (scenarios.length && !scenarios.some((s) => s.name === selected)) setSelected(scenarios[0].name);
   }, [scenarios, selected]);
@@ -71,7 +73,6 @@ export default function OptionsSection({ caseState, chartVariant }: Props) {
                 {heir && share ? ` · ${heir.name.split(' ')[0]}'s share ${formatPercent(share)}` : ''}
                 {simulation ? <> · simulated on <strong style={{ color: t.ink }}>{formatMoney(simulation.balance, { cents: true })}</strong></> : ''}
               </span>
-              <HypotheticalChip />
             </Stack>
           )}
           <Box sx={{ display: 'grid', gridTemplateColumns: '1.2fr 1.3fr 1fr 1fr auto', gap: 1.75, alignItems: 'end' }}>
@@ -119,8 +120,13 @@ export default function OptionsSection({ caseState, chartVariant }: Props) {
             <ScenarioChart scenarios={scenarios} selected={selected} onSelect={setSelected} variant={chartVariant} />
             {summary && (
               <Box sx={{ borderLeft: `3px solid ${t.accent}`, pl: 2, py: 0.5 }} data-testid="options-summary">
-                <Typography variant="overline" component="div">In plain English</Typography>
-                <Typography sx={{ maxWidth: 760, textWrap: 'pretty' }}>{summary}</Typography>
+                {points.length > 1 ? (
+                  <Box component="ul" sx={{ m: 0, pl: 2.25, maxWidth: 760, '& li': { fontSize: 14.5, lineHeight: 1.55, mb: 0.5, textWrap: 'pretty' } }}>
+                    {points.map((point) => <li key={point}>{point}</li>)}
+                  </Box>
+                ) : (
+                  <Typography sx={{ maxWidth: 760, textWrap: 'pretty' }}>{summary}</Typography>
+                )}
               </Box>
             )}
             <ScheduleTable scenarios={scenarios} selected={selected} onSelect={setSelected} divisors={divisors} />
