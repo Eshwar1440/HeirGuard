@@ -94,3 +94,14 @@ test('3. no case chosen: dropping the documents opens the case and finds the acc
   await expect(page.locator('[data-testid^="beneficiary-"]')).toHaveCount(2);
   await expect(page.locator('[data-testid^="check-"][data-status="fail"]')).toHaveCount(0);
 });
+
+test('4. estate ops returns a packet with a reason the heir sees', async ({ page }) => {
+  await startCase(page, 'packet_01_fixed');
+  await openDrawer(page, 'ops');
+  await expect(page.getByTestId('return-to-heir')).toBeDisabled();
+  await page.getByTestId('return-reason').fill('Please send a certified copy of the death certificate.');
+  await page.getByTestId('return-to-heir').click();
+  await expect(page.getByText('Your documents need another look.')).toBeVisible();
+  await expect(page.getByText('Please send a certified copy of the death certificate.')).toBeVisible();
+  await expect(page.getByTestId('approve')).toBeDisabled();
+});
