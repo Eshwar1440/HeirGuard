@@ -291,8 +291,10 @@ def _account_types(case: CaseState, beneficiary_id: Optional[str]) -> set[str]:
 
 
 def certified_copy(case: CaseState) -> list[CheckResult]:
-    """A photocopy fails only where a Schwab source asks for a certified copy (TOD);
-    elsewhere Schwab does not say whether a photocopy is accepted, so it needs review."""
+    """An upload can show signs that a certificate is not certified (a VOID pattern from a
+    photocopy, an "uncertified" notice), but never prove that it is. A copy fails only where
+    a Schwab source asks for a certified copy (TOD); elsewhere Schwab does not say whether a
+    copy is accepted, so it needs review. A clean upload passes with that limit stated."""
     certs = [d for d in case.documents if d.doc_type == "death_certificate"]
     values = [field_value(d, "certified_copy") for d in certs]
     evidence = [_ev(d.id, "certified_copy") for d in certs]
@@ -301,18 +303,21 @@ def certified_copy(case: CaseState) -> list[CheckResult]:
         if not certs:
             status, message = "needs_review", "No death certificate has been uploaded yet."
         elif "yes" in values:
-            status, message = "pass", "The death certificate is a certified copy."
+            status, message = "pass", (
+                "The death certificate shows the registrar's certification and no sign of a copy. "
+                "An upload cannot prove it is a certified copy, so Schwab may still ask for the original."
+            )
         elif None in values:
             status, message = "needs_review", "Could not tell whether the death certificate is a certified copy."
         elif certified_copy_required(_account_types(case, target)):
             status = "fail"
-            message = ("The death certificate is a photocopy. Schwab's terms for transfer-on-death "
-                       "accounts ask for a certified copy of the death certificate.")
+            message = ("The death certificate looks like a photocopy or an uncertified copy. Schwab's terms "
+                       "for transfer-on-death accounts ask for a certified copy of the death certificate.")
         else:
             status = "needs_review"
-            message = ("The death certificate looks like a photocopy. Schwab's published requirements "
-                       "for this account do not say whether a photocopy is accepted, so Schwab may ask "
-                       "for a certified copy.")
+            message = ("The death certificate looks like a photocopy or an uncertified copy. Schwab's "
+                       "published requirements for this account do not say whether a copy like this is "
+                       "accepted, so Schwab may ask for a certified copy.")
         results.append(
             CheckResult(rule_id="certified_copy", status=status, message=message,
                         beneficiary_id=target, evidence=evidence)
