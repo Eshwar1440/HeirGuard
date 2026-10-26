@@ -176,3 +176,9 @@ def test_pass_records_nothing():
     recorded: list[AuditEntry] = []
     result = check(NEUTRAL_SUMMARY, ALLOWED, case_id="case-1", record=recorded.append)
     assert result.ok and result.audit_entry is None and recorded == []
+
+
+@pytest.mark.parametrize("marker", ["- ", "* ", "• "])
+def test_bulleted_recommendation_is_caught(marker):
+    assert 'recommends a scenario: "take the lump sum"' in check(f"{marker}Take the lump sum.", ALLOWED).reasons
+    assert check(f"{marker}If you take the lump sum, the tax comes in one year.", ALLOWED).ok
