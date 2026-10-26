@@ -54,7 +54,7 @@ export default function App() {
           <Stack direction="row" spacing={1.75} sx={{ alignItems: 'center' }}>
             <Box
               component="img"
-              src="/heirguard-icon.png"
+              src="/heirguard-icon-reversed.png"
               alt=""
               aria-hidden
               sx={{ width: 36, height: 36, objectFit: 'contain' }}
