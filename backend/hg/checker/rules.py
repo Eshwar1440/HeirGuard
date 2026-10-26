@@ -17,7 +17,7 @@ from decimal import Decimal
 from typing import Callable, Optional
 
 from hg import store
-from hg.checker.requirements import Requirement, requirements_for
+from hg.checker.requirements import Requirement, certified_copy_required, requirements_for
 from hg.config import get_settings
 from hg.graph.resolve import field_value, link_applications
 from hg.schemas import Account, Beneficiary, CaseState, CheckResult, Evidence
@@ -58,68 +58,71 @@ def _applications_by_beneficiary(case: CaseState) -> dict[Optional[str], list[st
 # --- required_docs_present ---------------------------------------------------
 
 
-def _missing_message(missing: list[Requirement], title: str, who: Optional[str] = None) -> str:
-    parts = [
-        _label(r.doc_type) + (" (requirement is hypothetical)" if r.hypothetical else "")
-        for r in missing
-    ]
+def _docs_result(
+    reqs: list[Requirement],
+    found_for: Callable[[Requirement], list[str]],
+    title: str,
+    who: Optional[str],
+    beneficiary_id: Optional[str],
+) -> CheckResult:
+    """Required missing -> fail; not-established missing -> needs_review; conditional never blocks."""
+    missing = [r for r in reqs if not found_for(r)]
+    evidence = [_ev(d) for d in dict.fromkeys(d for r in reqs for d in found_for(r))]
+    hard = [r for r in missing if r.level == "required"]
+    unsure = [r for r in missing if r.level == "not_established"]
+    maybe = [r for r in missing if r.level == "conditional"]
     scope = f"{who} on {title}" if who else title
-    return f"Missing for {scope}: " + ", ".join(parts) + "."
+
+    parts = []
+    if hard:
+        parts.append(f"Missing for {scope}: " + ", ".join(_label(r.doc_type) for r in hard) + ".")
+    if unsure:
+        parts.append(
+            f"Not provided for {scope}: " + ", ".join(_label(r.doc_type) for r in unsure)
+            + ". No Schwab source establishes that it is required; confirm with Schwab."
+        )
+    if not hard and not unsure:
+        parts.append(f"All required documents for {scope} are present.")
+    if maybe:
+        parts.append(
+            "Schwab's checklist also mentions " + " and ".join(_label(r.doc_type) for r in maybe)
+            + ", which may be requested."
+        )
+    return CheckResult(
+        rule_id="required_docs_present",
+        status="fail" if hard else "needs_review" if unsure else "pass",
+        message=" ".join(parts),
+        beneficiary_id=beneficiary_id,
+        evidence=evidence,
+    )
 
 
 def required_docs_present(case: CaseState) -> list[CheckResult]:
-    rule = "required_docs_present"
     apps = _applications_by_beneficiary(case)
     by_type: dict[str, list[str]] = defaultdict(list)
     for doc in case.documents:
         by_type[doc.doc_type].append(doc.id)
 
-    def evaluate(reqs: list[Requirement], beneficiary_id: Optional[str]) -> tuple[list[Requirement], list[Evidence]]:
-        missing, evidence = [], []
-        for r in reqs:
-            found = apps.get(beneficiary_id, []) if r.per_beneficiary else by_type[r.doc_type]
-            if found:
-                evidence += [_ev(d) for d in found]
-            else:
-                missing.append(r)
-        return missing, evidence
+    def finder(beneficiary_id: Optional[str]) -> Callable[[Requirement], list[str]]:
+        return lambda r: apps.get(beneficiary_id, []) if r.per_beneficiary else by_type[r.doc_type]
 
     results, covered = [], set()
     for b in case.beneficiaries:
         account = _account_for(case, b)
         if account:
             covered.add(account.id)
-        missing, evidence = evaluate(requirements_for(account.type) if account else [], b.id)
+        reqs = requirements_for(account.type) if account else []
         title = account.title if account else "the account"
-        results.append(
-            CheckResult(
-                rule_id=rule,
-                status="fail" if missing else "pass",
-                message=_missing_message(missing, title, b.name) if missing
-                else f"All required documents for {b.name} on {title} are present.",
-                beneficiary_id=b.id,
-                evidence=evidence,
-            )
-        )
+        results.append(_docs_result(reqs, finder(b.id), title, b.name, b.id))
     for account in case.accounts:
-        if account.id in covered:
-            continue
-        reqs = [r for r in requirements_for(account.type) if not r.per_beneficiary]
-        missing, evidence = evaluate(reqs, None)
-        results.append(
-            CheckResult(
-                rule_id=rule,
-                status="fail" if missing else "pass",
-                message=_missing_message(missing, account.title) if missing
-                else f"All required documents for {account.title} are present.",
-                evidence=evidence,
-            )
-        )
+        if account.id not in covered:
+            reqs = [r for r in requirements_for(account.type) if not r.per_beneficiary]
+            results.append(_docs_result(reqs, finder(None), account.title, None, None))
     if not results:
         has_cert = bool(by_type["death_certificate"])
         results.append(
             CheckResult(
-                rule_id=rule,
+                rule_id="required_docs_present",
                 status="pass" if has_cert else "fail",
                 message="A death certificate is present." if has_cert else "Missing: death certificate.",
                 evidence=[_ev(d) for d in by_type["death_certificate"]],
@@ -279,22 +282,42 @@ def dod_consistent(case: CaseState) -> list[CheckResult]:
 # --- certified_copy ----------------------------------------------------------
 
 
+def _account_types(case: CaseState, beneficiary_id: Optional[str]) -> set[str]:
+    if beneficiary_id is None:
+        return {a.type for a in case.accounts}
+    b = next(b for b in case.beneficiaries if b.id == beneficiary_id)
+    account = _account_for(case, b)
+    return {account.type} if account else set()
+
+
 def certified_copy(case: CaseState) -> list[CheckResult]:
+    """A photocopy fails only where a Schwab source asks for a certified copy (TOD);
+    elsewhere Schwab does not say whether a photocopy is accepted, so it needs review."""
     certs = [d for d in case.documents if d.doc_type == "death_certificate"]
     values = [field_value(d, "certified_copy") for d in certs]
-    if not certs:
-        status, message = "needs_review", "No death certificate has been uploaded yet."
-    elif "yes" in values:
-        status, message = "pass", "The death certificate is a certified copy."
-    elif None in values:
-        status, message = "needs_review", "Could not tell whether the death certificate is a certified copy."
-    else:
-        status, message = "fail", "The death certificate is a photocopy, not a certified copy."
     evidence = [_ev(d.id, "certified_copy") for d in certs]
-    return [
-        CheckResult(rule_id="certified_copy", status=status, message=message, beneficiary_id=t, evidence=evidence)
-        for t in _targets(case)
-    ]
+    results = []
+    for target in _targets(case):
+        if not certs:
+            status, message = "needs_review", "No death certificate has been uploaded yet."
+        elif "yes" in values:
+            status, message = "pass", "The death certificate is a certified copy."
+        elif None in values:
+            status, message = "needs_review", "Could not tell whether the death certificate is a certified copy."
+        elif certified_copy_required(_account_types(case, target)):
+            status = "fail"
+            message = ("The death certificate is a photocopy. Schwab's terms for transfer-on-death "
+                       "accounts ask for a certified copy of the death certificate.")
+        else:
+            status = "needs_review"
+            message = ("The death certificate looks like a photocopy. Schwab's published requirements "
+                       "for this account do not say whether a photocopy is accepted, so Schwab may ask "
+                       "for a certified copy.")
+        results.append(
+            CheckResult(rule_id="certified_copy", status=status, message=message,
+                        beneficiary_id=target, evidence=evidence)
+        )
+    return results
 
 
 # --- field_review ------------------------------------------------------------

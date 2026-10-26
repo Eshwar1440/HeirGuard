@@ -31,13 +31,14 @@ def _by_rule(results, rule_id):
 # --- No database needed ------------------------------------------------------
 
 
-def test_requirements_cite_a_source_or_say_hypothetical():
+def test_every_requirement_cites_a_schwab_source_and_level():
     for row in REQUIREMENTS:
-        assert row.source
-        if row.hypothetical:
-            assert row.source.startswith("hypothetical")
-        else:
-            assert "schwab.com" in row.source and row.excerpt
+        assert "schwab.com" in row.source and row.excerpt
+        assert row.level in ("required", "conditional", "not_established")
+    trust = [r for r in REQUIREMENTS if r.doc_type == "trust_certification"]
+    assert trust and all(r.level == "not_established" for r in trust)
+    certified = [r for r in REQUIREMENTS if r.certified]
+    assert [r.account_type for r in certified] == ["tod_brokerage"]
 
 
 def test_applications_link_to_their_beneficiaries():
@@ -141,17 +142,41 @@ def test_required_docs_present_missing_application_blocks_only_that_heir(checked
 
 
 @pytest.mark.neo4j
-def test_required_docs_present_missing_trust_certification_is_case_wide(checked):
+def test_missing_trust_certification_needs_review_case_wide(checked):
+    # No Schwab source establishes the requirement, so it is review, not failure.
     docs = _by_rule(checked["packet_08"], "required_docs_present")
-    assert docs[None].status == "fail"
-    assert "hypothetical" in docs[None].message
+    assert docs[None].status == "needs_review"
+    assert "No Schwab source establishes" in docs[None].message
     assert docs["packet_08-b1"].status == "pass"
 
 
 @pytest.mark.neo4j
-def test_certified_copy(checked):
-    assert {r.status for r in _by_rule(checked["packet_06"], "certified_copy").values()} == {"fail"}
+def test_conditional_documents_are_mentioned_but_never_block(checked):
+    docs = _by_rule(checked["packet_01_fixed"], "required_docs_present")
+    for result in docs.values():
+        assert result.status == "pass"
+        assert "letters testamentary and affidavit of domicile, which may be requested" in result.message
+    with_letters = _by_rule(checked["packet_10"], "required_docs_present")
+    assert all("may be requested" not in r.message for r in with_letters.values())
+
+
+@pytest.mark.neo4j
+def test_photocopy_needs_review_for_inherited_ira(checked):
+    copies = _by_rule(checked["packet_06"], "certified_copy")
+    assert {r.status for r in copies.values()} == {"needs_review"}
     assert {r.status for r in _by_rule(checked["packet_10"], "certified_copy").values()} == {"pass"}
+
+
+@pytest.mark.neo4j
+def test_photocopy_fails_for_tod_account(neo4j):
+    # Schwab's Designated Beneficiary Plan Agreement asks for a certified copy.
+    case = _truth("packet_06").case_state()
+    tod = [a.model_copy(update={"type": "tod_brokerage"}) for a in case.accounts]
+    case = case.model_copy(update={"case_id": "test-variant", "accounts": tod})
+    build_case_graph(case)
+    results = run_checks(case)
+    assert {r.status for r in _by_rule(results, "certified_copy").values()} == {"fail"}
+    assert {r.status for r in _by_rule(results, "required_docs_present").values()} == {"pass"}
 
 
 @pytest.mark.neo4j
