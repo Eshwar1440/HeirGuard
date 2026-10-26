@@ -41,8 +41,9 @@ VOCAB: dict[str, tuple[FieldDef, ...]] = {
         _f("certificate_number", "text", "Certificate number"),
         _f("date_issued", "date", "Date the certificate was issued"),
         _f("certified_copy", "yes_no",
-           "yes only if a registrar's certification and seal text are present; no if a copy marker "
-           "such as COPY - NOT CERTIFIED is present or the seal text is missing"),
+           "what the upload shows, not a verification: no if a VOID or COPY background pattern, an "
+           "uncertified or informational notice, or no registrar certification is visible; yes if the "
+           "registrar's certification is visible with none of those signs"),
     ),
     "inherited_ira_application": (
         _f("decedent_name", "text", "Name of the deceased account owner"),
