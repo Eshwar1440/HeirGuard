@@ -12,7 +12,7 @@ from hg.data_gen import PACKETS, PacketTruth, generate_all, load_truth
 from hg.data_gen.__main__ import main
 from hg.data_gen.forms import FORM_FIELDS, FORM_PAGES
 from hg.data_gen.packets import DOD_FIELD, HEIR_NAME_FIELD, build_packet, misspell
-from hg.data_gen.pdf import WATERMARK
+from hg.data_gen.pdf import VOID_TEXT, WATERMARK
 from hg.data_gen.truth import RuleId
 from hg.schemas import Account, Beneficiary, Decedent, Document
 
@@ -140,13 +140,23 @@ def test_every_pdf_page_carries_the_watermark(truths, generated):
             assert pdf.count(WATERMARK.encode()) == pages
 
 
-def test_photocopy_marker_only_on_uncertified_certificates(truths, generated):
+def test_copies_show_only_realistic_signs(truths, generated):
+    """No rubber stamp: a photocopy shows the VOID pattern, an uncertified copy its printed notice."""
+    kinds = {}
     for truth in truths.values():
-        cert = next((d for d in truth.documents if d.doc_type == "death_certificate"), None)
+        cert = next(d for d in truth.documents if d.doc_type == "death_certificate")
         pdf = (generated / cert.file_ref).read_bytes()
-        is_copy = "certified_copy" in truth.planted_errors
-        assert (b"COPY - NOT CERTIFIED" in pdf) is is_copy
-        assert (b"CERTIFIED COPY OF VITAL RECORD" in pdf) is (not is_copy)
+        has_void = f"({VOID_TEXT})".encode() in pdf
+        has_notice = b"UNCERTIFIED COPY" in pdf
+        has_certification = b"CERTIFIED COPY OF VITAL RECORD" in pdf
+        assert b"COPY - NOT CERTIFIED" not in pdf
+        if "certified_copy" not in truth.planted_errors:
+            assert has_certification and not has_void and not has_notice
+            continue
+        kind = "photocopy" if has_void else "uncertified" if has_notice else None
+        kinds[truth.packet_id] = kind
+        assert has_certification is (kind == "photocopy")
+    assert kinds == {"packet_06": "photocopy", "packet_08": "uncertified"}
 
 
 def test_misspelled_names_are_fuzzy_matches_not_exact(truths):

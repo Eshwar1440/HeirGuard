@@ -16,6 +16,7 @@ from reportlab.lib.utils import simpleSplit
 from reportlab.pdfgen import canvas
 
 WATERMARK = "SPECIMEN - HYPOTHETICAL DATA"
+VOID_TEXT = "VOID"
 FOOTER = "Hypothetical specimen generated for a concept prototype. Not a real form or record."
 
 PAGE_W, PAGE_H = letter
@@ -26,7 +27,7 @@ ROW_H = 38
 INK = Color(0.12, 0.16, 0.22)
 MUTED = Color(0.38, 0.42, 0.48)
 RULE = Color(0.70, 0.73, 0.77)
-STAMP_RED = Color(0.78, 0.10, 0.10)
+VOID_GRAY = Color(0.45, 0.45, 0.45, alpha=0.30)
 WATERMARK_GRAY = Color(0.55, 0.55, 0.55, alpha=0.22)
 
 
@@ -157,20 +158,30 @@ class FormCanvas:
             text_y -= 14
         self.y -= 112
 
-    def stamp(self, text: str) -> None:
-        """A red rubber-stamp style marker, e.g. COPY - NOT CERTIFIED."""
+    def notice(self, text: str) -> None:
+        """A printed boxed notice, e.g. an issuing office's "uncertified copy" marking."""
+        c = self.c
+        lines = simpleSplit(text, "Helvetica-Bold", 10, CONTENT_W - 16)
+        height = 14 * len(lines) + 12
+        c.setStrokeColor(INK)
+        c.setLineWidth(1)
+        c.rect(MARGIN, self.y - height + 10, CONTENT_W, height, stroke=1, fill=0)
+        c.setFillColor(black)
+        c.setFont("Helvetica-Bold", 10)
+        for i, line in enumerate(lines):
+            c.drawString(MARGIN + 8, self.y - 4 - 14 * i, line)
+        self.y -= height + 10
+
+    def void_pantograph(self) -> None:
+        """Tile VOID across the page, as security paper shows when it is photocopied."""
         c = self.c
         c.saveState()
-        c.translate(PAGE_W - MARGIN - 130, self.y - 40)
-        c.rotate(-8)
-        c.setStrokeColor(STAMP_RED)
-        c.setFillColor(STAMP_RED)
-        c.setLineWidth(2.2)
-        c.rect(-110, -18, 220, 40, stroke=1, fill=0)
-        c.setFont("Helvetica-Bold", 16)
-        c.drawCentredString(0, -4, text)
+        c.setFillColor(VOID_GRAY)
+        c.setFont("Helvetica-Bold", 30)
+        for row, y in enumerate(range(70, int(PAGE_H) - 40, 90)):
+            for x in range(40 + (row % 2) * 60, int(PAGE_W), 130):
+                c.drawString(x, y, VOID_TEXT)
         c.restoreState()
-        self.y -= 90
 
     # --- Pages ---------------------------------------------------------------
 
@@ -201,4 +212,4 @@ class FormCanvas:
         self.c.save()
 
 
-__all__ = ["FormCanvas", "WATERMARK"]
+__all__ = ["FormCanvas", "VOID_TEXT", "WATERMARK"]

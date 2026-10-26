@@ -1,6 +1,6 @@
 {
   "packet_id": "packet_08",
-  "description": "A spouse inherits a traditional IRA and the decedent also held a trust-owned account. The trust certification is missing and the death certificate is a photocopy.",
+  "description": "A spouse inherits a traditional IRA and the decedent also held a trust-owned account. The trust certification is missing and the death certificate is an uncertified copy from the issuing office.",
   "notice": "SPECIMEN - HYPOTHETICAL DATA. No real person, account or record.",
   "decedent": {
     "id": "packet_08-d1",
@@ -190,7 +190,7 @@
     },
     {
       "rule_id": "certified_copy",
-      "note": "Death certificate is a photocopy marked COPY - NOT CERTIFIED, with no registrar seal.",
+      "note": "Death certificate is the issuing office's uncertified copy, marked as informational and not valid for legal purposes, with no registrar certification.",
       "document_id": "packet_08-death_certificate",
       "beneficiary_id": null
     }

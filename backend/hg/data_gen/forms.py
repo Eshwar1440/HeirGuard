@@ -9,9 +9,11 @@ Truth values are normalized, which is also what the reader should return:
 * ``percent``: plain number, no ``%`` (printed as ``49.5%``)
 * ``choice``: lowercase (printed title-cased, e.g. ``Child``)
 * ``account_type``: ``hg.schemas.AccountType`` value (printed as ``Traditional IRA``)
-* ``yes_no``: ``yes`` or ``no``. Not printed as a field: ``certified_copy`` is
-  ``yes`` when the registrar's certification and seal are present and ``no``
-  when a copy marker is present or the seal text is missing.
+* ``yes_no``: ``yes`` or ``no``. Not printed as a field: ``certified_copy`` records
+  what an upload can show, never that a copy is genuine. It is ``yes`` when the
+  registrar's certification is visible with no sign of a copy, and ``no`` for a
+  photocopy (security paper's VOID pattern shows through) or an issuing office's
+  uncertified copy (printed "uncertified" notice, no certification).
 
 Layouts are plausible but generic. They do not copy any real state's,
 court's or custodian's form.
@@ -111,7 +113,9 @@ ACCOUNT_TYPE_LABELS = {
     "trust_owned": "Trust-Owned",
 }
 
-COPY_MARKER = "COPY - NOT CERTIFIED"
+UNCERTIFIED_NOTICE = (
+    "UNCERTIFIED COPY. For informational purposes only. Not valid for legal or identity purposes."
+)
 
 
 def display(spec: FieldSpec, value: str) -> str:
@@ -163,7 +167,10 @@ def render_death_certificate(path: Path, v: dict[str, str], extra: dict) -> None
     f.section("Decedent")
     f.fields(_items(doc, v, 1))
     f.section("Certification")
-    if v["certified_copy"] == "yes":
+    kind = "certified" if v["certified_copy"] == "yes" else extra.get("copy_kind", "photocopy")
+    if kind in ("certified", "photocopy"):
+        # A photocopy of a certified copy reproduces the printed certification;
+        # only the security paper's VOID pattern gives it away.
         f.seal(
             [
                 "CERTIFIED COPY OF VITAL RECORD",
@@ -173,9 +180,12 @@ def render_death_certificate(path: Path, v: dict[str, str], extra: dict) -> None
                 "Valid only with the raised seal of the registrar.",
             ]
         )
+        if kind == "photocopy":
+            f.void_pantograph()
+    elif kind == "uncertified":
+        f.notice(UNCERTIFIED_NOTICE)
     else:
-        f.paragraph("This reproduction was made from a document provided by the requester.")
-        f.stamp(COPY_MARKER)
+        raise ValueError(f"unknown copy kind {kind!r}")
     f.end_page()
     f.save()
 

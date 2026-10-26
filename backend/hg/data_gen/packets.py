@@ -57,6 +57,7 @@ class Plant:
     rule_id: RuleId
     doc_type: Optional[str] = None
     heir: int = 0
+    copy_kind: str = "photocopy"  # certified_copy only: "photocopy" or "uncertified"
 
 
 @dataclass(frozen=True)
@@ -150,7 +151,8 @@ PACKETS: tuple[PacketSpec, ...] = (
     PacketSpec(
         "packet_06", 6,
         "A sibling less than 10 years younger inherits a traditional IRA. The death certificate "
-        "is a photocopy marked COPY - NOT CERTIFIED.",
+        "is a photocopy of a certified copy: the printed certification shows, but so does the "
+        "security paper's VOID pattern.",
         _years(1946, 1946), _DIED_2025H1, True, "traditional_ira",
         (Heir("sibling", "100", _years(1950, 1951), "eligible_designated"),),
         plants=(Plant("certified_copy", "death_certificate"),),
@@ -170,13 +172,14 @@ PACKETS: tuple[PacketSpec, ...] = (
     PacketSpec(
         "packet_08", 8,
         "A spouse inherits a traditional IRA and the decedent also held a trust-owned account. "
-        "The trust certification is missing and the death certificate is a photocopy.",
+        "The trust certification is missing and the death certificate is an uncertified copy "
+        "from the issuing office.",
         _years(1945, 1947), _DIED_2025H1, True, "traditional_ira",
         (Heir("spouse", "100", _years(1947, 1950), "spouse"),),
         trust_account=True,
         plants=(
             Plant("required_docs_present", "trust_certification"),
-            Plant("certified_copy", "death_certificate"),
+            Plant("certified_copy", "death_certificate", copy_kind="uncertified"),
         ),
     ),
     PacketSpec(
@@ -504,9 +507,16 @@ def _plant(
         )
     if plant.rule_id == "certified_copy":
         doc.values["certified_copy"] = "no"
+        doc.extra["copy_kind"] = plant.copy_kind
+        note = {
+            "photocopy": "Death certificate is a photocopy of a certified copy: the printed certification "
+            "is there, but the security paper's VOID pattern shows through.",
+            "uncertified": "Death certificate is the issuing office's uncertified copy, marked as "
+            "informational and not valid for legal purposes, with no registrar certification.",
+        }[plant.copy_kind]
         return PlantedError(
             rule_id=plant.rule_id,
-            note="Death certificate is a photocopy marked COPY - NOT CERTIFIED, with no registrar seal.",
+            note=note,
             document_id=doc.doc_id,
         )
     raise ValueError(f"unknown rule {plant.rule_id}")
