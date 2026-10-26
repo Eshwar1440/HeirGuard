@@ -203,6 +203,10 @@ def test_postgres_checkpoint_survives_a_restart(flow, monkeypatch):
     service.get_flow.cache_clear()
     case_id = service.create_case("packet_01_fixed").case.case_id
     service.approve(case_id)
+    with checkpoint.get_checkpointer().conn.connection() as conn:
+        rows = conn.execute("select tablename, rowsecurity from pg_tables where tablename = any(%s)",
+                            (list(checkpoint.CHECKPOINT_TABLES),)).fetchall()
+    assert {r["tablename"]: r["rowsecurity"] for r in rows} == dict.fromkeys(checkpoint.CHECKPOINT_TABLES, True)
 
     checkpoint.get_checkpointer.cache_clear()  # as if the process restarted: new pool, new graph
     service.get_flow.cache_clear()
