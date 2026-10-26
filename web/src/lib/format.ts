@@ -50,9 +50,9 @@ export function formatTime(iso: string | null | undefined): string {
 
 export const SCENARIO_LABELS: Record<string, string> = {
   lump_sum_now: 'Lump sum now',
-  minimums_then_balloon: 'Minimums, then balloon',
+  minimums_then_balloon: 'Minimums, rest at the end',
   even_spread: 'Even spread',
-  fill_bracket: 'Fill the bracket',
+  fill_bracket: 'Fill your tax bracket',
 };
 export const scenarioLabel = (name: string) => SCENARIO_LABELS[name] ?? name.replace(/_/g, ' ');
 
