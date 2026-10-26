@@ -128,8 +128,12 @@ def get_driver():
     settings = get_settings()
     if not settings.neo4j_password:
         raise StoreConfigError("NEO4J_PASSWORD must be set")
+    # Server notifications are off: they only warn that a relationship type
+    # (e.g. POSSIBLY_SAME_AS) has no instances yet, which is normal here.
     return GraphDatabase.driver(
-        settings.neo4j_uri, auth=(settings.neo4j_user, settings.neo4j_password)
+        settings.neo4j_uri,
+        auth=(settings.neo4j_user, settings.neo4j_password),
+        notifications_min_severity="OFF",
     )
 
 
