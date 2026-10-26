@@ -221,6 +221,18 @@ def render(results: list[DocResult], truths: list[PacketTruth]) -> str:
     else:
         lines.append("No misses.")
 
+    lines += [
+        "",
+        "## Limits of this test",
+        "",
+        "- The packets are clean, machine-generated PDFs with a text layer. They do not test scans, phone "
+        "photos, handwriting, skew, stamps over text or low resolution, so real-world accuracy will be lower. "
+        "Treat these numbers as a best case.",
+        "- Each packet uses the same five specimen layouts; unfamiliar layouts are not tested.",
+        "- Confidence is the model's own estimate. A high-confidence wrong value is the dangerous case, which is "
+        "why silent errors are reported separately and every field still passes through the rule checks.",
+    ]
+
     wrong_type = [r for r in done if r.got_type != r.doc_type]
     if wrong_type:
         lines += ["", "## Wrong document type", "", "| Packet | Document | Expected | Read |", "|---|---|---|---|"]

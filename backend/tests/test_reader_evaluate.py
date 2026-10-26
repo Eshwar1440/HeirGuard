@@ -60,3 +60,4 @@ def test_perfect_reader_scores_100_percent(monkeypatch):
     fields = sum(len(r.fields) for r in results)
     assert f"| Fields correct | {fields}/{fields} (100.0%) |" in report
     assert "No misses." in report
+    assert "## Limits of this test" in report and "best case" in report
