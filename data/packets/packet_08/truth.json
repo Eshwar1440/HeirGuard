@@ -184,7 +184,7 @@
   "planted_error_details": [
     {
       "rule_id": "required_docs_present",
-      "note": "Required trust_certification is missing for the trust-owned account.",
+      "note": "trust_certification is missing for the trust-owned account. No Schwab source establishes that it is required, so the checker asks for review.",
       "document_id": null,
       "beneficiary_id": null
     },

@@ -501,8 +501,9 @@ def _plant(
         is_app = doc.doc_type == "inherited_ira_application"
         return PlantedError(
             rule_id=plant.rule_id,
-            note=f"Required {doc.doc_type} is missing"
-            + (f" for {heir.name}." if is_app else " for the trust-owned account."),
+            note=f"Required {doc.doc_type} is missing for {heir.name}." if is_app
+            else f"{doc.doc_type} is missing for the trust-owned account. No Schwab source establishes "
+            "that it is required, so the checker asks for review.",
             beneficiary_id=heir.id if is_app else None,
         )
     if plant.rule_id == "certified_copy":
