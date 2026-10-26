@@ -82,3 +82,15 @@ test('2. flawed case: packet_01_flawed is caught, reasons shown under the hood, 
   await openDrawer(page, 'ops');
   await expect(page.getByTestId('approve')).toBeEnabled();
 });
+
+test('3. no case chosen: dropping the documents opens the case and finds the account on file', async ({ page }) => {
+  await page.goto('/');
+  const dir = fileURLToPath(new URL('../../data/packets/packet_01_fixed/', import.meta.url));
+  const files = ['death_certificate.pdf', 'inherited_ira_application_b1.pdf', 'inherited_ira_application_b2.pdf'].map((f) => dir + f);
+  await page.getByTestId('upload-dropzone').locator('input').setInputFiles(files);
+  await page.getByTestId('upload-submit').click();
+  await expect(page.getByTestId('reading-progress')).toBeVisible();
+  await expect(page.getByTestId('reading-progress')).toBeHidden({ timeout: READ_TIMEOUT });
+  await expect(page.locator('[data-testid^="beneficiary-"]')).toHaveCount(2);
+  await expect(page.locator('[data-testid^="check-"][data-status="fail"]')).toHaveCount(0);
+});
