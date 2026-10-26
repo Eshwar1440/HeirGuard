@@ -24,7 +24,7 @@ export default function EstateOpsTab({ caseState }: { caseState: CaseState }) {
   return (
     <Stack spacing={1.75} data-testid="tab-ops">
       <Typography variant="body2">
-        Stand-in for the human review step. Calls <Mono>POST /cases/{caseState.case_id}/approve</Mono>, which resumes the flow from <Mono>await_approval</Mono>.
+        Review the case, then approve it or deny it with a reason.
       </Typography>
       <KeyValueRows rows={[
         ['Case', <Mono>{caseState.case_id}</Mono>],
