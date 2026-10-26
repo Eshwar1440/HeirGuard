@@ -88,3 +88,10 @@ export function summaryPoints(text?: string | null): { label?: string; body: str
       return m ? { label: m[1], body: m[2] } : { body: l };
     });
 }
+
+/** A neutral, stable case name for a sample packet ("Case 4821"), so the menu never hints at its contents. */
+export function caseName(sampleId: string): string {
+  let h = 0;
+  for (const ch of sampleId) h = Math.imul(h ^ ch.charCodeAt(0), 2654435761) >>> 0;  // spread similar ids apart
+  return `Case ${1000 + (h % 9000)}`;
+}
