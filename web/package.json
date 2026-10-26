@@ -9,9 +9,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc -b",
-    "generate:api": "openapi-typescript http://localhost:8000/openapi.json -o src/api/schema.d.ts",
-    "test:e2e": "playwright test",
-    "test:e2e:headed": "playwright test --headed"
+    "gen:api": "openapi-typescript http://localhost:8000/openapi.json -o src/api/schema.d.ts",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
