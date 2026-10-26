@@ -30,3 +30,6 @@ ai_log/*.jsonl
 .idea/
 .DS_Store
 Thumbs.db
+
+# Local uploads when Supabase is not configured
+data/uploads/
