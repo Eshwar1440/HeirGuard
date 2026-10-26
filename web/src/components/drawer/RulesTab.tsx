@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from '@mui/material';
 import type { CaseState } from '../../api/types';
 import { reasonFor } from '../../lib/case';
+import { words } from '../../lib/format';
 import { MonoStatus } from '../common';
 import { tokens as t } from '../../theme';
 
@@ -18,7 +19,7 @@ export default function RulesTab({ caseState }: { caseState: CaseState }) {
           <Box key={`${c.rule_id}-${c.beneficiary_id}-${i}`} data-testid={`rule-${c.rule_id}`} data-status={c.status}
             sx={{ border: `1px solid ${fail ? t.failBorder : t.rowRule}`, bgcolor: fail ? '#FFF7F6' : '#fff', borderRadius: 1, px: 1.5, py: 1.25, display: 'flex', flexDirection: 'column', gap: 0.6 }}>
             <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-              <Box sx={{ fontFamily: t.mono, fontSize: 12.5, fontWeight: 500 }}>{c.rule_id}</Box>
+              <Box sx={{ fontSize: 13, fontWeight: 600 }}>{words(c.rule_id)}</Box>
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <Box sx={{ fontSize: 12, color: t.muted }}>{c.beneficiary_id ? names[c.beneficiary_id] ?? c.beneficiary_id : 'case'}</Box>
                 <MonoStatus status={c.status} />
@@ -31,7 +32,7 @@ export default function RulesTab({ caseState }: { caseState: CaseState }) {
               </Box>
             )}
             {!!c.evidence?.length && (
-              <Box sx={{ fontSize: 11, color: t.muted }}>evidence: {c.evidence.map((e) => `${e.document_id}.${e.field_name}`).join(', ')}</Box>
+              <Box sx={{ fontSize: 11, color: t.muted }}>evidence: {c.evidence.map((e) => words(e.field_name) || 'whole document').join(', ')}</Box>
             )}
           </Box>
         );

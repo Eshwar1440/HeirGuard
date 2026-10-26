@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { useAudit } from '../../api/hooks';
-import { formatTime } from '../../lib/format';
+import { formatTime, words } from '../../lib/format';
 import { ErrorCard } from '../common';
 import { tokens as t } from '../../theme';
 
@@ -23,7 +23,7 @@ export default function AuditTab({ caseId }: { caseId: string }) {
             <Box sx={{ flex: 1, width: '1px', bgcolor: t.rule }} />
           </Stack>
           <Stack sx={{ pb: 1.75 }} spacing={0.25}>
-            <Box sx={{ fontFamily: t.mono, fontSize: 12, fontWeight: 500 }}>{a.node} <span style={{ color: t.muted, fontWeight: 400 }}>· {a.action}</span></Box>
+            <Box sx={{ fontSize: 12.5, fontWeight: 600 }}>{words(a.node)} <span style={{ color: t.muted, fontWeight: 400 }}>· {words(a.action)}</span></Box>
             <Box sx={{ fontSize: 12.5, color: t.body, lineHeight: 1.4 }}>{a.summary}</Box>
           </Stack>
         </Box>

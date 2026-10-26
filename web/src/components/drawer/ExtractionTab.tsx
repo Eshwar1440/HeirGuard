@@ -5,7 +5,7 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import { Box, Chip, LinearProgress, Stack, Typography } from '@mui/material';
 import type { CaseState } from '../../api/types';
 import { API_URL, CONFIDENCE_THRESHOLD } from '../../config';
-import { formatConfidence } from '../../lib/format';
+import { formatConfidence, words } from '../../lib/format';
 import { tokens as t } from '../../theme';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
@@ -56,7 +56,7 @@ export default function ExtractionTab({ caseState }: { caseState: CaseState }) {
             return (
               <Box key={f.name} sx={{ py: 1, borderBottom: `1px solid ${t.rowRule}` }} data-testid={`ext-${f.name}`}>
                 <Stack direction="row" spacing={1} sx={{ justifyContent: 'space-between' }}>
-                  <Box sx={{ fontFamily: t.mono, fontSize: 11.5, color: t.muted }}>{f.name} <span style={{ color: t.disabled }}>p.{f.page}</span></Box>
+                  <Box sx={{ fontSize: 12, color: t.muted }}>{words(f.name)} <span style={{ color: t.disabled }}>p.{f.page}</span></Box>
                   <Box sx={{ fontSize: 13, fontWeight: 600, color: bad ? t.fail : f.value == null ? t.muted : t.ink, bgcolor: bad ? t.failTint : 'transparent', px: bad ? 0.5 : 0 }}>{f.value == null ? 'unreadable' : String(f.value)}</Box>
                 </Stack>
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mt: 0.6 }}>
