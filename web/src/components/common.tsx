@@ -91,3 +91,13 @@ export function KeyValueRows({ rows }: { rows: [string, ReactNode][] }) {
     </Box>
   );
 }
+
+export function SummaryPoints({ points, size = 14.5 }: { points: { label?: string; body: string }[]; size?: number }) {
+  return (
+    <Box component="ul" sx={{ m: 0, pl: 2.25, maxWidth: 760, '& li': { fontSize: size, lineHeight: 1.5, mb: 0.6, textWrap: 'pretty' } }}>
+      {points.map((p) => (
+        <li key={`${p.label}-${p.body}`}>{p.label && <strong style={{ color: t.navy }}>{p.label}: </strong>}{p.body}</li>
+      ))}
+    </Box>
+  );
+}

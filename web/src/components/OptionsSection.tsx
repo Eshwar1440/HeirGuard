@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { Box, Button, Card, InputAdornment, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import type { CaseState, FilingStatus, HeirInputs } from '../api/types';
 import { useSimulate } from '../api/hooks';
-import { heirOf, optionsSummary } from '../lib/case';
+import { heirOf, optionsSummary, summaryPoints } from '../lib/case';
 import { FILING_LABELS, formatMoney, formatPercent } from '../lib/format';
 import ScenarioChart from './ScenarioChart';
 import ScheduleTable from './ScheduleTable';
-import { Banner, ErrorCard, HypotheticalChip, Placeholder, SectionHeader } from './common';
+import { Banner, ErrorCard, Placeholder, SectionHeader, SummaryPoints } from './common';
 import { tokens as t } from '../theme';
 
 interface Props { caseState: CaseState; chartVariant?: 'grouped' | 'stacked' }
@@ -26,6 +26,8 @@ export default function OptionsSection({ caseState, chartVariant }: Props) {
 
   const scenarios = caseState.scenarios ?? [];
   const summary = optionsSummary(caseState)?.text;
+  // The writer (M5) puts one point per line, each starting with "- ".
+  const points = summaryPoints(summary);
   useEffect(() => {
     if (scenarios.length && !scenarios.some((s) => s.name === selected)) setSelected(scenarios[0].name);
   }, [scenarios, selected]);
@@ -50,7 +52,7 @@ export default function OptionsSection({ caseState, chartVariant }: Props) {
     return (
       <Stack component="section" spacing={1.75}>
         <SectionHeader n="02" title="Your options" />
-        <Placeholder>Unlocks after estate operations approves the documents.</Placeholder>
+        <Placeholder>Your options open once your documents are approved.</Placeholder>
       </Stack>
     );
   }
@@ -71,7 +73,6 @@ export default function OptionsSection({ caseState, chartVariant }: Props) {
                 {heir && share ? ` · ${heir.name.split(' ')[0]}'s share ${formatPercent(share)}` : ''}
                 {simulation ? <> · simulated on <strong style={{ color: t.ink }}>{formatMoney(simulation.balance, { cents: true })}</strong></> : ''}
               </span>
-              <HypotheticalChip />
             </Stack>
           )}
           <Box sx={{ display: 'grid', gridTemplateColumns: '1.2fr 1.3fr 1fr 1fr auto', gap: 1.75, alignItems: 'end' }}>
@@ -83,10 +84,10 @@ export default function OptionsSection({ caseState, chartVariant }: Props) {
             <TextField select label="Filing status" size="small" value={filing} onChange={(e) => setFiling(e.target.value as FilingStatus)}>
               {Object.entries(FILING_LABELS).map(([k, v]) => <MenuItem key={k} value={k}>{v}</MenuItem>)}
             </TextField>
-            <TextField label="State tax rate (optional)" size="small" value={stateRate} onChange={(e) => setStateRate(e.target.value)} placeholder="0"
+            <TextField label="State tax rate" size="small" value={stateRate} onChange={(e) => setStateRate(e.target.value)} placeholder="Optional"
               slotProps={{ input: { endAdornment: <InputAdornment position="end">%</InputAdornment> } }} />
-            <TextField size="small" value={growth} onChange={(e) => setGrowth(e.target.value)} placeholder="default"
-              label={<Stack direction="row" spacing={0.75} component="span" sx={{ alignItems: 'center' }}><span>Growth</span><HypotheticalChip small /></Stack>}
+            {/* Empty uses the backend's default growth rate, labeled hypothetical in the assumptions and Simulator tab. */}
+            <TextField label="Growth rate" size="small" value={growth} onChange={(e) => setGrowth(e.target.value)} placeholder="Default"
               slotProps={{ input: { endAdornment: <InputAdornment position="end">%/yr</InputAdornment> } }} />
             <Button variant="contained" onClick={run} disabled={!incomeOk || !ready || sim.isPending} data-testid="compare-options" sx={{ py: 1.1 }}>
               {sim.isPending ? 'Comparing…' : scenarios.length ? 'Update' : 'Compare options'}
@@ -119,8 +120,11 @@ export default function OptionsSection({ caseState, chartVariant }: Props) {
             <ScenarioChart scenarios={scenarios} selected={selected} onSelect={setSelected} variant={chartVariant} />
             {summary && (
               <Box sx={{ borderLeft: `3px solid ${t.accent}`, pl: 2, py: 0.5 }} data-testid="options-summary">
-                <Typography variant="overline" component="div">In plain English</Typography>
-                <Typography sx={{ maxWidth: 760, textWrap: 'pretty' }}>{summary}</Typography>
+                {points.length > 1 ? (
+                  <SummaryPoints points={points} />
+                ) : (
+                  <Typography sx={{ maxWidth: 760, textWrap: 'pretty' }}>{summary}</Typography>
+                )}
               </Box>
             )}
             <ScheduleTable scenarios={scenarios} selected={selected} onSelect={setSelected} divisors={divisors} />

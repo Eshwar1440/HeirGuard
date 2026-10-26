@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AppBar, Box, Button, Card, Stack, Switch, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Card, MenuItem, Select, Stack, Switch, Toolbar, Typography } from '@mui/material';
 import { useCase, useCreateCase } from './api/hooks';
 import { APP_NAME, DEMO_SAMPLES, FOOTER_TEXT } from './config';
 import { activeStage, failCount } from './lib/case';
@@ -69,18 +69,16 @@ export default function App() {
 
       <Box sx={{ height: APPBAR_H, flex: 'none' }} />
       <Stack direction="row" spacing={2} sx={{ alignItems: 'center', height: CASEBAR_H, flex: 'none', bgcolor: '#fff', borderBottom: `1px solid ${t.rule}`, px: 3.5, mr: drawerOpen ? `${DRAWER_WIDTH}px` : 0 }}>
-        <Typography variant="overline" sx={{ whiteSpace: 'nowrap' }}>Demo case</Typography>
-        <Stack direction="row" spacing={1}>
-          {DEMO_SAMPLES.map((s) => {
-            const on = sampleId === s.id;
-            return (
-              <Button key={s.id} size="small" variant={on ? 'contained' : 'outlined'} onClick={() => start(s.id)} disabled={create.isPending}
-                data-testid={`sample-${s.id}`} sx={{ fontFamily: t.mono, fontSize: 12.5, borderWidth: on ? 0 : 1, borderColor: t.inputBorder }}>
-                {s.label}
-              </Button>
-            );
-          })}
-        </Stack>
+        <Typography variant="overline" sx={{ whiteSpace: 'nowrap' }}>Case</Typography>
+        <Select size="small" value={sampleId ?? ''} displayEmpty disabled={create.isPending}
+          onChange={(e) => e.target.value && start(String(e.target.value))}
+          SelectDisplayProps={{ 'data-testid': 'case-select' } as React.HTMLAttributes<HTMLDivElement>}
+          sx={{ minWidth: 170, fontSize: 13.5, '& .MuiSelect-select': { py: 0.75 } }}>
+          <MenuItem value="" disabled>Choose a case</MenuItem>
+          {DEMO_SAMPLES.map((s) => (
+            <MenuItem key={s.id} value={s.id} data-testid={`sample-${s.id}`}>{s.label}</MenuItem>
+          ))}
+        </Select>
         {decedent && (
           <Stack direction="row" spacing={1.75} sx={{ alignItems: 'center', ml: 'auto !important', fontSize: 13, color: t.muted, whiteSpace: 'nowrap' }}>
             <span>Decedent <strong style={{ color: t.ink }}>{decedent.name}</strong></span>
@@ -104,18 +102,14 @@ export default function App() {
             <Card sx={{ borderStyle: 'dashed', borderColor: '#B9C4D0', py: 6, px: 4, textAlign: 'center' }} data-testid="empty-state">
               <Typography variant="h3" sx={{ fontSize: 22 }}>No case open yet</Typography>
               <Typography variant="body2" sx={{ color: t.muted, maxWidth: 460, mx: 'auto', mt: 1.25 }}>
-                Choose a sample packet to start. {APP_NAME} reads the documents, checks them per beneficiary, and walks through the options.
+                Choose a case from the Case menu above. {APP_NAME} reads the documents, checks them per beneficiary, and walks through the options.
               </Typography>
-              <Stack direction="row" spacing={1.25} sx={{ justifyContent: 'center', mt: 2 }}>
-                <Button variant="contained" onClick={() => start('packet_01_fixed')}>Start best case</Button>
-                <Button variant="outlined" onClick={() => start('packet_01_flawed')}>Start flawed case</Button>
-              </Stack>
             </Card>
           )}
 
           {c && (
             <>
-              <DocumentsSection caseState={c} onOpenOps={() => { setDrawerOpen(true); setTab('ops'); }} />
+              <DocumentsSection caseState={c} />
               <OptionsSection caseState={c} />
               <NextStep caseState={c} />
               <AfterSection caseState={c} />

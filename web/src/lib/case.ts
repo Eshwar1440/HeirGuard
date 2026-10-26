@@ -76,3 +76,15 @@ export const RULE_LABELS: Record<string, string> = {
   field_review: 'Fields read clearly',
 };
 export const ruleLabel = (id: string) => RULE_LABELS[id] ?? id;
+
+/** The writer's options summary as points: one per line, "- " stripped, "Label: rest" split for a bold label. */
+export function summaryPoints(text?: string | null): { label?: string; body: string }[] {
+  return (text ?? '')
+    .split('\n')
+    .map((l) => l.trim().replace(/^[-•*]\s*/, ''))
+    .filter(Boolean)
+    .map((l) => {
+      const m = /^"?([^:"]{2,60})"?:\s+(.+)$/.exec(l);
+      return m ? { label: m[1], body: m[2] } : { body: l };
+    });
+}

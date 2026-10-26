@@ -60,10 +60,6 @@ export function useCreateCase() {
 export const useUploadDocuments = (id: string | null) =>
   useCaseMutation<File[]>(id, (cid, files) => api.upload<CaseView>(`/cases/${cid}/documents`, files));
 
-export const usePatchField = (id: string | null) =>
-  useCaseMutation<{ field: string; document_id: string; value: string }>(id, (cid, v) =>
-    api.patch<CaseView>(`/cases/${cid}/fields/${encodeURIComponent(v.field)}`, { document_id: v.document_id, value: v.value }));
-
 export const useSubmitForReview = (id: string | null) =>
   useCaseMutation<void>(id, (cid) => api.post<CaseView>(`/cases/${cid}/submit-for-review`));
 

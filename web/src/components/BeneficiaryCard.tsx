@@ -1,37 +1,32 @@
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Box, Card, Chip, List, ListItem, Stack, TextField, Typography } from '@mui/material';
+import { Box, Card, Chip, List, ListItem, Stack, Typography } from '@mui/material';
 import type { Beneficiary, CaseState } from '../api/types';
 import { applicationFor, checksFor, reasonFor, ruleLabel } from '../lib/case';
-import { formatPercent } from '../lib/format';
+import { formatPercent, plainValue } from '../lib/format';
 import { StatusIcon } from './common';
 import { tokens as t } from '../theme';
 
-const EDITABLE = [
+const SHOWN = [
   ['beneficiary_name', 'Full name'],
   ['beneficiary_date_of_birth', 'Date of birth'],
   ['relationship', 'Relationship'],
-  ['share_percent', 'Share of account (%)'],
+  ['share_percent', 'Share of the account'],
 ] as const;
-
-// Names can't be typed over: a misspelled name is fixed by uploading a corrected form (M8 rule).
-const NAME_FIELDS = new Set(['beneficiary_name']);
-
-export interface PendingEdit { field: string; document_id: string; value: string }
 
 interface Props {
   caseState: CaseState;
   beneficiary: Beneficiary;
-  edits: Record<string, PendingEdit>;
-  onEdit: (e: PendingEdit) => void;
   files: File[];
   onFiles: (files: File[]) => void;
   stacked?: boolean;
-  /** True while the flow waits for the heir to fix something. */
-  editable?: boolean;
+  /** True while the flow waits for the heir to upload a corrected document. */
+  canUpload?: boolean;
 }
 
-export default function BeneficiaryCard({ caseState, beneficiary: b, edits, onEdit, files, onFiles, stacked, editable }: Props) {
+// Values are shown exactly as read and are never edited here: a wrong value is fixed by
+// uploading a corrected document, which the reader then reads like any other upload.
+export default function BeneficiaryCard({ caseState, beneficiary: b, files, onFiles, stacked, canUpload }: Props) {
   const checks = checksFor(caseState, b);
   const failing = checks.filter((c) => c.status !== 'pass');
   const ok = checks.length > 0 && failing.length === 0;
@@ -40,7 +35,7 @@ export default function BeneficiaryCard({ caseState, beneficiary: b, edits, onEd
 
   const onDrop = useCallback((accepted: File[]) => onFiles([...files, ...accepted]), [files, onFiles]);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop, disabled: !editable, accept: { 'application/pdf': ['.pdf'], 'image/png': ['.png'], 'image/jpeg': ['.jpg', '.jpeg'] },
+    onDrop, disabled: !canUpload, accept: { 'application/pdf': ['.pdf'], 'image/png': ['.png'], 'image/jpeg': ['.jpg', '.jpeg'] },
   });
 
   return (
@@ -72,21 +67,20 @@ export default function BeneficiaryCard({ caseState, beneficiary: b, edits, onEd
 
       {app && (
         <Box sx={{ px: 2.25, pt: 1.5 }}>
-          <Typography variant="overline" component="div" sx={{ mb: 1 }}>What we read{editable ? ' · edit to correct' : ''}</Typography>
+          <Typography variant="overline" component="div" sx={{ mb: 1 }}>What we read from the application</Typography>
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.25 }}>
-            {EDITABLE.map(([name, label]) => {
+            {SHOWN.map(([name, label]) => {
               const f = app.fields.find((x) => x.name === name);
               if (!f) return null;
-              const key = `${app.id}.${name}`;
               const bad = failingFields.has(name);
-              const locked = !editable || NAME_FIELDS.has(name);
               return (
-                <TextField key={name} label={label} size="small" error={bad}
-                  helperText={editable && NAME_FIELDS.has(name) ? 'To change a name, upload a corrected form' : undefined}
-                  slotProps={{ htmlInput: { 'data-testid': `field-${b.id}-${name}`, readOnly: locked } }}
-                  value={edits[key]?.value ?? String(f.value ?? '')}
-                  onChange={(e) => onEdit({ field: name, document_id: app.id, value: e.target.value })}
-                  sx={bad ? { '& .MuiOutlinedInput-root': { bgcolor: '#FFF7F6' } } : undefined} />
+                <Box key={name} data-testid={`field-${b.id}-${name}`} data-bad={bad || undefined}
+                  sx={{ border: `1px solid ${bad ? t.fail : t.rule}`, bgcolor: bad ? '#FFF7F6' : t.panel, borderRadius: 1, px: 1.25, py: 0.75 }}>
+                  <Box sx={{ fontSize: 11.5, color: bad ? t.failText : t.muted }}>{label}</Box>
+                  <Box sx={{ fontSize: 14, fontWeight: 500, color: f.value == null ? t.muted : bad ? t.failText : t.ink }}>
+                    {f.value == null ? 'Unreadable' : plainValue(name, f.value)}
+                  </Box>
+                </Box>
               );
             })}
           </Box>
@@ -96,12 +90,12 @@ export default function BeneficiaryCard({ caseState, beneficiary: b, edits, onEd
       <Box sx={{ p: 2.25, pt: 1.75 }}>
         <Box {...getRootProps()} data-testid={`dropzone-${b.id}`} sx={{
           border: `1.5px dashed ${files.length || isDragActive ? t.accent : '#B9C4D0'}`, borderRadius: '6px', p: 1.75, textAlign: 'center',
-          fontSize: 13, cursor: 'pointer', color: files.length ? t.accentText : t.muted, bgcolor: files.length || isDragActive ? t.accentTint : '#FAFBFC',
-          '&:hover': { bgcolor: '#EEF5FC' },
+          fontSize: 13, cursor: canUpload ? 'pointer' : 'default', color: files.length ? t.accentText : t.muted,
+          bgcolor: files.length || isDragActive ? t.accentTint : '#FAFBFC', '&:hover': canUpload ? { bgcolor: '#EEF5FC' } : undefined,
         }}>
           <input {...getInputProps()} />
           {files.length ? `${files.map((f) => f.name).join(', ')} added. Re-check to read it.`
-            : editable ? 'Drag a corrected document here, or click to choose a file' : 'Uploads open when a document needs a fix'}
+            : canUpload ? 'To fix a value, drag a corrected document here, or click to choose a file' : 'Uploads open when a document needs a fix'}
         </Box>
       </Box>
     </Card>
