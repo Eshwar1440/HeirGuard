@@ -28,7 +28,7 @@ export default function EstateOpsTab({ caseState }: { caseState: CaseState }) {
       </Typography>
       <KeyValueRows rows={[
         ['Case', <Mono>{caseState.case_id}</Mono>],
-        ['Status', <Mono>{String(caseState.status ?? '—')}</Mono>],
+        ['Status', String(caseState.status ?? '—').replace(/_/g, ' ')],
         ['Documents', String(caseState.documents?.length ?? 0)],
         ['Approved', caseState.approved ? 'yes' : 'no'],
       ]} />
