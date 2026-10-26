@@ -82,3 +82,26 @@ test('2. flawed case: packet_01_flawed is caught, reasons shown under the hood, 
   await openDrawer(page, 'ops');
   await expect(page.getByTestId('approve')).toBeEnabled();
 });
+
+test('3. no case chosen: dropping the documents opens the case and finds the account on file', async ({ page }) => {
+  await page.goto('/');
+  const dir = fileURLToPath(new URL('../../data/packets/packet_01_fixed/', import.meta.url));
+  const files = ['death_certificate.pdf', 'inherited_ira_application_b1.pdf', 'inherited_ira_application_b2.pdf'].map((f) => dir + f);
+  await page.getByTestId('upload-dropzone').locator('input').setInputFiles(files);
+  await page.getByTestId('upload-submit').click();
+  await expect(page.getByTestId('reading-progress')).toBeVisible();
+  await expect(page.getByTestId('reading-progress')).toBeHidden({ timeout: READ_TIMEOUT });
+  await expect(page.locator('[data-testid^="beneficiary-"]')).toHaveCount(2);
+  await expect(page.locator('[data-testid^="check-"][data-status="fail"]')).toHaveCount(0);
+});
+
+test('4. estate ops returns a packet with a reason the heir sees', async ({ page }) => {
+  await startCase(page, 'packet_01_fixed');
+  await openDrawer(page, 'ops');
+  await expect(page.getByTestId('return-to-heir')).toBeDisabled();
+  await page.getByTestId('return-reason').fill('Please send a certified copy of the death certificate.');
+  await page.getByTestId('return-to-heir').click();
+  await expect(page.getByText('Your documents need another look.')).toBeVisible();
+  await expect(page.getByText('Please send a certified copy of the death certificate.')).toBeVisible();
+  await expect(page.getByTestId('approve')).toBeDisabled();
+});

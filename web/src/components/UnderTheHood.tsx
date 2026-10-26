@@ -62,7 +62,7 @@ export default function UnderTheHood({ open, onClose, tab, onTab, caseState, top
           <Typography variant="body2" sx={{ textAlign: 'center', py: 5 }}>Start a case to see each step here.</Typography>
         ) : reading && (tab === 'extraction' || tab === 'rules' || tab === 'graph') ? (
           <Stack spacing={1.25}>
-            <Typography variant="body2">Running <code>read_documents</code>. Results appear when reading finishes.</Typography>
+            <Typography variant="body2">Reading documents. Results appear when reading finishes.</Typography>
             <LinearProgress color="secondary" />
           </Stack>
         ) : (

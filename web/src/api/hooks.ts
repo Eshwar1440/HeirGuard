@@ -52,7 +52,10 @@ function useCaseMutation<TVars>(id: string | null, fn: (id: string, v: TVars) =>
 export function useCreateCase() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (sample_id: string) => toCaseState(await api.post<CaseView>('/cases', { sample_id })),
+    // A sample case opens with its records on file and reads its packet; with no sample the case
+    // opens empty and waits for the heir's upload.
+    mutationFn: async (sample_id: string | null) =>
+      toCaseState(await api.post<CaseView>('/cases', { sample_id, with_documents: sample_id !== null })),
     onSuccess: (c) => qc.setQueryData(qk.case(c.case_id), c),
   });
 }
@@ -60,10 +63,15 @@ export function useCreateCase() {
 export const useUploadDocuments = (id: string | null) =>
   useCaseMutation<File[]>(id, (cid, files) => api.upload<CaseView>(`/cases/${cid}/documents`, files));
 
+/** Demo only (under the hood): read the case's sample packet as if the heir uploaded it. */
+export const useLoadSampleDocuments = (id: string | null) =>
+  useCaseMutation<void>(id, (cid) => api.post<CaseView>(`/cases/${cid}/sample-documents`));
+
 export const useSubmitForReview = (id: string | null) =>
   useCaseMutation<void>(id, (cid) => api.post<CaseView>(`/cases/${cid}/submit-for-review`));
 
-export const useApprove = (id: string | null) => useCaseMutation<void>(id, (cid) => api.post<CaseView>(`/cases/${cid}/approve`));
+export const useApprove = (id: string | null) =>
+  useCaseMutation<{ approved: boolean; note?: string } | void>(id, (cid, v) => api.post<CaseView>(`/cases/${cid}/approve`, v ?? { approved: true }));
 
 export const useSimulate = (id: string | null) =>
   useCaseMutation<HeirInputs>(id, (cid, inputs) => api.post<CaseView>(`/cases/${cid}/simulate`, inputs));

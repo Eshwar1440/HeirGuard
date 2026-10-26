@@ -4,12 +4,13 @@ import type { CaseState, Choice } from '../api/types';
 import { useChoice } from '../api/hooks';
 import KeepDialog from './KeepDialog';
 import TalkSummaryDialog from './TalkSummaryDialog';
+import { SPECIALIST_PHONE } from '../config';
 import { Placeholder, SectionHeader } from './common';
 import { tokens as t } from '../theme';
 
 const CARDS: { key: Choice; title: string; body: string; note: string }[] = [
   { key: 'keep', title: 'Keep at Schwab', body: 'Open an inherited IRA with your share. The application is prefilled from your verified documents, and you review every field.', note: 'Application prepared.' },
-  { key: 'talk', title: 'Talk to a professional', body: 'Get a summary of your options to share with a tax professional or advisor before deciding. Nothing moves until you choose.', note: 'Your summary for a tax professional is ready.' },
+  { key: 'talk', title: 'Talk to a professional', body: 'Call an inheritance specialist, or share a summary of your options with your own tax professional. Nothing moves until you choose.', note: `Call ${SPECIALIST_PHONE} (hypothetical number). Your summary is ready to bring along.` },
   { key: 'transfer', title: 'Transfer out', body: 'Move your share to another firm with a trustee-to-trustee transfer. Nothing is held.', note: 'Transfer request recorded. Nothing is held.' },
 ];
 

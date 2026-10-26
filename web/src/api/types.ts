@@ -66,6 +66,7 @@ export type CaseState = CaseRecord & {
   heir_id: string | null;
   simulation: Simulation | null;
   handoff: PrefillHandoff | null;
+  review_note: string | null;
 };
 
 export function toCaseState(v: CaseView): CaseState {
@@ -75,6 +76,7 @@ export function toCaseState(v: CaseView): CaseState {
     heir_id: v.heir_id ?? null,
     simulation: (v.simulation as Simulation | null | undefined) ?? null,
     handoff: v.handoff ?? null,
+    review_note: v.review_note ?? null,
   };
 }
 

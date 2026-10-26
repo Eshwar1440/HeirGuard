@@ -1,6 +1,6 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import type { CaseState } from '../api/types';
-import { FOOTER_TEXT } from '../config';
+import { FOOTER_TEXT, SPECIALIST_HOURS, SPECIALIST_PHONE } from '../config';
 import { heirOf, optionsSummary, summaryPoints } from '../lib/case';
 import { ACCOUNT_TYPE_LABELS, FILING_LABELS, formatDate, formatMoney, formatPercent, plainValue, scenarioLabel } from '../lib/format';
 import { KeyValueRows, SummaryPoints } from './common';
@@ -28,6 +28,10 @@ export default function TalkSummaryDialog({ caseState, open, onClose }: { caseSt
         </Typography>
       </DialogTitle>
       <DialogContent dividers sx={{ px: 3, py: 2, display: 'flex', flexDirection: 'column', gap: 2.25 }}>
+        <Box sx={{ bgcolor: t.accentTint, border: `1px solid ${t.accentBorder}`, borderRadius: 1, px: 2, py: 1.5 }} data-testid="specialist-phone">
+          <Typography sx={{ fontWeight: 600, color: t.accentText }}>Talk to an inheritance specialist: {SPECIALIST_PHONE}</Typography>
+          <Typography variant="caption">{SPECIALIST_HOURS}. Hypothetical number and hours for this prototype. Bring this summary to the call.</Typography>
+        </Box>
         <Section title="The inheritance">
           <KeyValueRows rows={[
             ['Account owner', caseState.decedent?.name ?? '—'],

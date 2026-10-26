@@ -1,7 +1,7 @@
 import { Box, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import type { CaseState } from '../../api/types';
-import { FILING_LABELS, formatMoney, formatPercent, toNumber } from '../../lib/format';
-import { KeyValueRows, Mono } from '../common';
+import { words, FILING_LABELS, formatMoney, formatPercent, toNumber } from '../../lib/format';
+import { KeyValueRows } from '../common';
 import { tokens as t } from '../../theme';
 
 const factor = (v: string | null | undefined) => (v == null ? '—' : Number(v).toFixed(1));
@@ -21,13 +21,13 @@ export default function SimulatorTab({ caseState }: { caseState: CaseState }) {
   return (
     <Stack spacing={1.75} data-testid="tab-simulator">
       <KeyValueRows rows={[
-        ['annual_income', formatMoney(inp.annual_income)],
-        ['filing_status', FILING_LABELS[inp.filing_status] ?? inp.filing_status],
-        ['state_tax_rate', formatPercent(inp.state_tax_rate, { fraction: true })],
-        ['growth_rate', <>{formatPercent(inp.growth_rate, { fraction: true })} <span style={{ color: t.amberText }}>(hypothetical)</span></>],
-        ...(inp.bracket_to_fill ? [['bracket_to_fill', formatPercent(inp.bracket_to_fill, { fraction: true })] as [string, string]] : []),
+        ['annual income', formatMoney(inp.annual_income)],
+        ['filing status', FILING_LABELS[inp.filing_status] ?? inp.filing_status],
+        ['state tax rate', formatPercent(inp.state_tax_rate, { fraction: true })],
+        ['growth rate', <>{formatPercent(inp.growth_rate, { fraction: true })} <span style={{ color: t.amberText }}>(hypothetical)</span></>],
+        ...(inp.bracket_to_fill ? [['bracket to fill', formatPercent(inp.bracket_to_fill, { fraction: true })] as [string, string]] : []),
         ['balance (heir share)', <>{formatMoney(sim.balance, { cents: true })} <span style={{ color: t.amberText }}>(hypothetical)</span></>],
-        ['beneficiary_class', <Mono>{sim.rules.beneficiary_class}</Mono>],
+        ['beneficiary class', words(sim.rules.beneficiary_class)],
         ['annual minimums', sim.rules.annual_rmds_required ? 'required' : 'not required'],
         ['federal brackets', `${sim.tax_year} (IRS Rev. Proc. 2025-32)`],
       ]} />
@@ -60,7 +60,7 @@ export default function SimulatorTab({ caseState }: { caseState: CaseState }) {
       )}
       {!!flags.length && (
         <Box sx={{ fontSize: 12, color: t.amberText, bgcolor: t.callout, border: `1px solid ${t.calloutBorder}`, borderRadius: 1, px: 1.25, py: 1 }}>
-          {flags.map((f) => <div key={f}>flag: <Mono>{f}</Mono></div>)}
+          {flags.map((f) => <div key={f}>flag: {words(f)}</div>)}
         </Box>
       )}
     </Stack>

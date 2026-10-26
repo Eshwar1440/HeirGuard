@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { AppBar, Box, Button, Card, MenuItem, Select, Stack, Switch, Toolbar, Typography } from '@mui/material';
-import { useCase, useCreateCase } from './api/hooks';
-import { APP_NAME, DEMO_SAMPLES, FOOTER_TEXT } from './config';
-import { activeStage, failCount } from './lib/case';
+import { AppBar, Box, Button, MenuItem, Select, Stack, Switch, Toolbar, Typography } from '@mui/material';
+import { useCase, useCreateCase, useSamples } from './api/hooks';
+import { APP_NAME, FOOTER_TEXT } from './config';
+import { activeStage, caseName, failCount } from './lib/case';
 import { formatMoney } from './lib/format';
 import ProgressTracker from './components/ProgressTracker';
 import ReadingProgress from './components/ReadingProgress';
+import UploadDocuments from './components/UploadDocuments';
 import DocumentsSection from './components/DocumentsSection';
 import OptionsSection from './components/OptionsSection';
 import NextStep from './components/NextStep';
@@ -24,6 +25,7 @@ export default function App() {
   const [tab, setTab] = useState<DrawerTab>('extraction');
 
   const create = useCreateCase();
+  const samples = useSamples();
   const caseQ = useCase(caseId);
   const c = caseQ.data;
 
@@ -52,12 +54,26 @@ export default function App() {
       <AppBar position="fixed" sx={{ zIndex: (th) => th.zIndex.drawer + 1 }}>
         <Toolbar sx={{ minHeight: '60px !important', px: '28px !important', justifyContent: 'space-between' }}>
           <Stack direction="row" spacing={1.75} sx={{ alignItems: 'center' }}>
-            <Box aria-hidden sx={{ width: 22, height: 22, transform: 'rotate(45deg)', border: '2px solid #6BBBEF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Box sx={{ width: 6, height: 6, bgcolor: '#E8B45A' }} />
-            </Box>
-            <Typography component="h1" sx={{ fontFamily: t.serif, fontSize: 21, fontWeight: 600, whiteSpace: 'nowrap' }}>{APP_NAME}</Typography>
+            <Box
+              component="img"
+              src="/heirguard-white.png?v=3"
+              alt=""
+              aria-hidden
+              sx={{ width: 38, height: 38, objectFit: 'contain' }}
+            />
+            <Stack spacing={0.1} sx={{ whiteSpace: 'nowrap' }}>
+              <Typography
+                component="h1"
+                sx={{ color: '#fff', fontSize: 17, fontWeight: 650, letterSpacing: 1.4, lineHeight: 1.1 }}
+              >
+                {APP_NAME.toUpperCase()}
+              </Typography>
+              <Typography sx={{ color: '#9FC7EC', fontSize: 9.5, fontWeight: 600, letterSpacing: 1.65, lineHeight: 1.2 }}>
+                INHERITED SERVICES
+              </Typography>
+            </Stack>
             <Box sx={{ width: '1px', height: 22, bgcolor: 'rgba(255,255,255,.25)' }} />
-            <Typography sx={{ fontSize: 13, color: '#C9D6E3', whiteSpace: 'nowrap' }}>Inherited account guide</Typography>
+            <Typography sx={{ fontSize: 13, color: '#C9D6E3', whiteSpace: 'nowrap' }}>A guided account transition experience</Typography>
           </Stack>
           <Button onClick={() => setDrawerOpen((o) => !o)} data-testid="toggle-under-the-hood" aria-pressed={drawerOpen}
             sx={{ color: '#fff', border: '1px solid rgba(255,255,255,.3)', pl: 1.5, pr: 0.5, '&:hover': { bgcolor: 'rgba(255,255,255,.08)' } }}>
@@ -75,8 +91,8 @@ export default function App() {
           SelectDisplayProps={{ 'data-testid': 'case-select' } as React.HTMLAttributes<HTMLDivElement>}
           sx={{ minWidth: 170, fontSize: 13.5, '& .MuiSelect-select': { py: 0.75 } }}>
           <MenuItem value="" disabled>Choose a case</MenuItem>
-          {DEMO_SAMPLES.map((s) => (
-            <MenuItem key={s.id} value={s.id} data-testid={`sample-${s.id}`}>{s.label}</MenuItem>
+          {(samples.data ?? []).map((s) => (
+            <MenuItem key={s.sample_id} value={s.sample_id} data-testid={`sample-${s.sample_id}`}>{caseName(s.sample_id)}</MenuItem>
           ))}
         </Select>
         {decedent && (
@@ -98,14 +114,7 @@ export default function App() {
 
           {create.isPending && <ReadingProgress />}
 
-          {!caseId && !create.isPending && (
-            <Card sx={{ borderStyle: 'dashed', borderColor: '#B9C4D0', py: 6, px: 4, textAlign: 'center' }} data-testid="empty-state">
-              <Typography variant="h3" sx={{ fontSize: 22 }}>No case open yet</Typography>
-              <Typography variant="body2" sx={{ color: t.muted, maxWidth: 460, mx: 'auto', mt: 1.25 }}>
-                Choose a case from the Case menu above. {APP_NAME} reads the documents, checks them per beneficiary, and walks through the options.
-              </Typography>
-            </Card>
-          )}
+          {!caseId && !create.isPending && <UploadDocuments onCase={setCaseId} />}
 
           {c && (
             <>

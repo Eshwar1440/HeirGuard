@@ -51,6 +51,7 @@ class CaseView(BaseModel):
     waiting_for: Optional[str] = None  # heir_fix | approval | heir_inputs | choice
     simulation: Optional[dict] = None
     handoff: Optional[PrefillHandoff] = None
+    review_note: Optional[str] = None  # why estate operations returned the packet, shown to the heir
 
 
 class Sample(BaseModel):
@@ -86,8 +87,10 @@ def _view(case_id: str) -> CaseView:
     case = CaseState.model_validate(values["case"])
     if waiting and not (waiting == CHOICE and case.choice):  # after a choice, its status stands
         case = case.model_copy(update={"status": _STATUS_WHILE_WAITING[waiting]})
+    decision = values.get("last_decision") or {}
+    note = decision.get("note") if waiting == HEIR_FIX and decision.get("approved") is False else None
     return CaseView(case=case, heir_id=values.get("heir_id"), waiting_for=waiting,
-                    simulation=values.get("simulation"), handoff=values.get("handoff"))
+                    simulation=values.get("simulation"), handoff=values.get("handoff"), review_note=note)
 
 
 def _run(case_id: str, payload: Any) -> CaseView:
@@ -174,6 +177,9 @@ def submit_for_review(case_id: str) -> CaseView:
 
 
 def approve(case_id: str, approved: bool = True, by: str = "estate_ops", note: str = "") -> CaseView:
+    """Approve the packet, or return it to the heir with a reason (required, shown to the heir)."""
+    if not approved and not note.strip():
+        raise FlowError(422, "give the heir a reason when returning the packet")
     return _resume(case_id, APPROVAL, Approval(approved=approved, by=by, note=note).model_dump())
 
 

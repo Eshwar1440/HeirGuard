@@ -72,6 +72,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/cases/{case_id}/sample-documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sample Documents
+         * @description Demo only (under the hood): read the case's sample packet as if the heir uploaded it.
+         */
+        post: operations["sample_documents_cases__case_id__sample_documents_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/cases/{case_id}/submit-for-review": {
         parameters: {
             query?: never;
@@ -377,6 +397,8 @@ export interface components {
                 [key: string]: unknown;
             } | null;
             handoff?: components["schemas"]["PrefillHandoff"] | null;
+            /** Review Note */
+            review_note?: string | null;
         };
         /** CheckResult */
         CheckResult: {
@@ -564,6 +586,11 @@ export interface components {
             sample_id?: string | null;
             /** Beneficiary Id */
             beneficiary_id?: string | null;
+            /**
+             * With Documents
+             * @default true
+             */
+            with_documents: boolean;
         };
         /** PrefillField */
         PrefillField: {
@@ -751,6 +778,37 @@ export interface operations {
                 "multipart/form-data": components["schemas"]["Body_upload_documents_cases__case_id__documents_post"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaseView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    sample_documents_cases__case_id__sample_documents_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                case_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {

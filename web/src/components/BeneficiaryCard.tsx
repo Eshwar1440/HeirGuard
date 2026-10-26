@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Box, Card, Chip, List, ListItem, Stack, Typography } from '@mui/material';
+import { Box, Card, List, ListItem, Stack, Typography } from '@mui/material';
 import type { Beneficiary, CaseState } from '../api/types';
 import { applicationFor, checksFor, reasonFor, ruleLabel } from '../lib/case';
 import { formatPercent, plainValue } from '../lib/format';
@@ -47,7 +47,6 @@ export default function BeneficiaryCard({ caseState, beneficiary: b, files, onFi
             {b.relationship.charAt(0).toUpperCase() + b.relationship.slice(1)} · {b.designation === 'contingent' ? 'Contingent' : 'Primary'} beneficiary · {formatPercent(b.share_percent)} share
           </Typography>
         </Box>
-        <Chip size="small" label={ok ? 'Ready' : 'Needs a fix'} sx={{ bgcolor: ok ? t.passTint : t.failTint, color: ok ? t.passText : t.failText }} />
       </Stack>
 
       <List disablePadding sx={{ px: 2.25, display: 'grid', gridTemplateColumns: stacked ? '1fr 1fr' : '1fr', columnGap: 2.75 }}>

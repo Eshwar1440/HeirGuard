@@ -70,7 +70,9 @@ export const theme = createTheme({
       styleOverrides: { root: { whiteSpace: 'nowrap', borderRadius: 4 }, outlined: { borderWidth: 1.5, '&:hover': { borderWidth: 1.5 } } },
     },
     MuiChip: { styleOverrides: { root: { fontWeight: 600, fontSize: 12 }, sizeSmall: { height: 22 } } },
+    // Labels are always raised (MuiInputLabel shrink), so the border must always leave a gap for them.
     MuiOutlinedInput: {
+      defaultProps: { notched: true },
       styleOverrides: {
         root: { backgroundColor: '#fff', fontSize: 14, '& .MuiOutlinedInput-notchedOutline': { borderColor: t.inputBorder } },
         input: { padding: '9px 10px' },

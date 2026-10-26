@@ -106,3 +106,6 @@ export function plainValue(name: string, value: string | null | undefined): stri
   if (name === 'relationship' || name === 'designation') return value.charAt(0).toUpperCase() + value.slice(1);
   return value;
 }
+
+/** A code name in words: "build_case_graph" -> "build case graph". */
+export const words = (name: string | null | undefined) => String(name ?? '').replace(/_/g, ' ');
