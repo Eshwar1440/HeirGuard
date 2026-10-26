@@ -1,0 +1,410 @@
+{
+  "packet_id": "packet_10",
+  "description": "Clean packet. Two adult children inherit a traditional IRA; the decedent also held a trust-owned account. Letters, affidavit and trust certification are all consistent.",
+  "notice": "SPECIMEN - HYPOTHETICAL DATA. No real person, account or record.",
+  "decedent": {
+    "id": "packet_10-d1",
+    "name": "Daniel Martin",
+    "date_of_birth": "1949-10-28",
+    "date_of_death": "2025-01-27",
+    "rmds_started": true
+  },
+  "accounts": [
+    {
+      "id": "packet_10-a1",
+      "type": "traditional_ira",
+      "title": "Traditional IRA of Daniel Martin, deceased",
+      "balance": "698032.08"
+    },
+    {
+      "id": "packet_10-a2",
+      "type": "trust_owned",
+      "title": "The Martin Family Trust, dated 08/04/2007",
+      "balance": "697073.84"
+    }
+  ],
+  "beneficiaries": [
+    {
+      "id": "packet_10-b1",
+      "name": "Stephanie Martin",
+      "date_of_birth": "1984-10-12",
+      "relationship": "child",
+      "share_percent": "50",
+      "designation": "primary",
+      "account_id": "packet_10-a1",
+      "beneficiary_class": "designated",
+      "disabled": null,
+      "chronically_ill": null
+    },
+    {
+      "id": "packet_10-b2",
+      "name": "Kevin Martin",
+      "date_of_birth": "1983-03-07",
+      "relationship": "child",
+      "share_percent": "50",
+      "designation": "primary",
+      "account_id": "packet_10-a1",
+      "beneficiary_class": "designated",
+      "disabled": null,
+      "chronically_ill": null
+    }
+  ],
+  "documents": [
+    {
+      "id": "packet_10-death_certificate",
+      "case_id": "packet_10",
+      "file_ref": "packet_10/death_certificate.pdf",
+      "doc_type": "death_certificate",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Daniel Martin",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_birth",
+          "value": "1949-10-28",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_death",
+          "value": "2025-01-27",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "place_of_death",
+          "value": "North Michaelside",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "issuing_county",
+          "value": "Cole County",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "issuing_state",
+          "value": "Ohio",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certificate_number",
+          "value": "2025-761-301379",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_issued",
+          "value": "2025-02-05",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certified_copy",
+          "value": "yes",
+          "confidence": 1.0,
+          "page": 1
+        }
+      ],
+      "needs_review": false
+    },
+    {
+      "id": "packet_10-inherited_ira_application-b1",
+      "case_id": "packet_10",
+      "file_ref": "packet_10/inherited_ira_application_b1.pdf",
+      "doc_type": "inherited_ira_application",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Daniel Martin",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "decedent_date_of_death",
+          "value": "2025-01-27",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_type",
+          "value": "traditional_ira",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_title",
+          "value": "Traditional IRA of Daniel Martin, deceased",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_name",
+          "value": "Stephanie Martin",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_date_of_birth",
+          "value": "1984-10-12",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "relationship",
+          "value": "child",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "designation",
+          "value": "primary",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "share_percent",
+          "value": "50",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "signature_name",
+          "value": "Stephanie Martin",
+          "confidence": 1.0,
+          "page": 2
+        },
+        {
+          "name": "signature_date",
+          "value": "2025-04-14",
+          "confidence": 1.0,
+          "page": 2
+        }
+      ],
+      "needs_review": false
+    },
+    {
+      "id": "packet_10-inherited_ira_application-b2",
+      "case_id": "packet_10",
+      "file_ref": "packet_10/inherited_ira_application_b2.pdf",
+      "doc_type": "inherited_ira_application",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Daniel Martin",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "decedent_date_of_death",
+          "value": "2025-01-27",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_type",
+          "value": "traditional_ira",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_title",
+          "value": "Traditional IRA of Daniel Martin, deceased",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_name",
+          "value": "Kevin Martin",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_date_of_birth",
+          "value": "1983-03-07",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "relationship",
+          "value": "child",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "designation",
+          "value": "primary",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "share_percent",
+          "value": "50",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "signature_name",
+          "value": "Kevin Martin",
+          "confidence": 1.0,
+          "page": 2
+        },
+        {
+          "name": "signature_date",
+          "value": "2025-05-17",
+          "confidence": 1.0,
+          "page": 2
+        }
+      ],
+      "needs_review": false
+    },
+    {
+      "id": "packet_10-letters_testamentary",
+      "case_id": "packet_10",
+      "file_ref": "packet_10/letters_testamentary.pdf",
+      "doc_type": "letters_testamentary",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Daniel Martin",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_death",
+          "value": "2025-01-27",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "case_number",
+          "value": "PR-2025-01659",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "court_name",
+          "value": "Probate Court of Cole County",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "court_county",
+          "value": "Cole County",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_issued",
+          "value": "2025-04-12",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "executor_name",
+          "value": "Stephanie Martin",
+          "confidence": 1.0,
+          "page": 1
+        }
+      ],
+      "needs_review": false
+    },
+    {
+      "id": "packet_10-affidavit_of_domicile",
+      "case_id": "packet_10",
+      "file_ref": "packet_10/affidavit_of_domicile.pdf",
+      "doc_type": "affidavit_of_domicile",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Daniel Martin",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_death",
+          "value": "2025-01-27",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "affiant_capacity",
+          "value": "executor",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "domicile_address",
+          "value": "64471 Evans Ports Apt. 588, North Michaelside, Ohio",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "affiant_name",
+          "value": "Stephanie Martin",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "notary_date",
+          "value": "2025-05-15",
+          "confidence": 1.0,
+          "page": 1
+        }
+      ],
+      "needs_review": false
+    },
+    {
+      "id": "packet_10-trust_certification",
+      "case_id": "packet_10",
+      "file_ref": "packet_10/trust_certification.pdf",
+      "doc_type": "trust_certification",
+      "fields": [
+        {
+          "name": "trust_name",
+          "value": "The Martin Family Trust",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "trust_date",
+          "value": "2007-08-04",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "grantor_date_of_death",
+          "value": "2025-01-27",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "grantor_name",
+          "value": "Daniel Martin",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "successor_trustee_name",
+          "value": "Stephanie Martin",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certification_date",
+          "value": "2025-03-16",
+          "confidence": 1.0,
+          "page": 1
+        }
+      ],
+      "needs_review": false
+    }
+  ],
+  "planted_errors": [],
+  "planted_error_details": []
+}
