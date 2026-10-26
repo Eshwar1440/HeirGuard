@@ -279,3 +279,12 @@ def test_heir_upload_opens_a_case_without_documents(flow):
     uploads = [(p.name, p.read_bytes(), "application/pdf") for p in sorted((PACKETS / "packet_01_flawed").glob("*.pdf"))]
     view = service.add_documents(case_id, uploads)
     assert view.waiting_for == "heir_fix" and {c.rule_id for c in view.case.checks if c.status != "pass"} == {"shares_total_100"}
+
+
+def test_upload_without_a_case_finds_the_account_on_file(flow):
+    case_id = service.create_case(None, with_documents=False).case.case_id
+    uploads = [(p.name, p.read_bytes(), "application/pdf") for p in sorted((PACKETS / "packet_01_fixed").glob("*.pdf"))]
+    view = service.add_documents(case_id, uploads)
+    assert view.case.decedent is not None and len(view.case.beneficiaries) == 2
+    assert view.heir_id == view.case.beneficiaries[0].id
+    assert view.waiting_for == "approval" and "records_matched" in _actions(case_id)
