@@ -32,7 +32,7 @@ export default function AfterSection({ caseState }: { caseState: CaseState }) {
           </Stack>
           {caseState.simulation?.rules.year_of_death_rmd_may_be_due && (
             <Box sx={{ px: 2.5, py: 1.25, fontSize: 13, color: t.amberText, bgcolor: t.callout, borderBottom: `1px solid ${t.calloutBorder}` }}>
-              A year-of-death minimum may still be due{caseState.decedent ? ` for ${caseState.decedent.date_of_death.slice(0, 4)}` : ''}. Estate operations confirms whether it was taken.
+              A year-of-death minimum may still be due{caseState.decedent ? ` for ${caseState.decedent.date_of_death.slice(0, 4)}` : ''}. We'll confirm whether it was taken.
             </Box>
           )}
           <Table size="small">
