@@ -44,16 +44,11 @@ def issue_text(check: CheckResult) -> str:
 
 
 def options_text(payload: dict) -> str:
-    """Neutral comparison from the summarize_options payload (see writer.write)."""
-    scenarios = payload["scenarios"]
-    parts = []
-    if scenarios:
-        parts.append(f"Here is how the {len(scenarios)} options compare, using your inputs.")
-        for s in scenarios:
-            parts.append(
-                f"{s['label']}: estimated total tax {money(s['total_tax'])}, "
-                f"and {money(s['after_tax_total'])} kept after tax."
-            )
-    parts.append(payload["rule"]["summary"])
-    parts.append(DISCLAIMER)
-    return " ".join(parts)
+    """Neutral comparison from the summarize_options payload (see writer.write), one point per line."""
+    points = [
+        f"{s['label']}: estimated total tax {money(s['total_tax'])}, and {money(s['after_tax_total'])} kept after tax."
+        for s in payload["scenarios"]
+    ]
+    points.append(payload["rule"]["summary"])
+    points.append(DISCLAIMER)
+    return "\n".join(f"- {p}" for p in points)

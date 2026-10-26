@@ -194,3 +194,11 @@ def test_allowed_numbers_include_years_of_dates():
     allowed = allowed_numbers({"message": "died 2025-04-30", "flag": True, "none": None})
     assert allowed == {"died 2025-04-30", "2025"}
     assert normalize_allowed(allowed) == {"2025-04-30", Decimal(2025)}
+
+
+def test_options_template_is_one_point_per_line():
+    result, inputs = _demo()
+    text = templates.options_text(writer.options_payload(result.scenarios, result.rules, inputs))
+    lines = text.splitlines()
+    assert len(lines) == len(result.scenarios) + 2 and all(line.startswith("- ") for line in lines)
+    assert "Plain" not in writer.OPTIONS_SYSTEM and 'starting with "- "' in writer.OPTIONS_SYSTEM

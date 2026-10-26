@@ -34,7 +34,7 @@ _COMMON_RULES = """- Warm and plain. Short sentences. Speak to the reader as "yo
 and you may write a date in words. Never round, add, subtract or compute a new number. Write numbers as digits.
 - Explain, never recommend. Do not use the words "should", "recommend", "suggest", "best" or "right choice", \
 and never tell the reader which option to take.
-- Plain text only. No lists, headings or markdown.
+- No headings, bold or other markdown.
 - If the input has previous_attempt_blocked, write a new version that fixes every listed reason."""
 
 ISSUE_SYSTEM = f"""You explain one problem found in a packet of estate documents to the person who inherited the \
@@ -47,7 +47,8 @@ photocopy. Schwab needs a certified copy, which you can order from the county th
 OPTIONS_SYSTEM = f"""You summarize withdrawal options for a person who inherited an IRA. The input is JSON: the \
 scenarios a calculator produced, the IRS rule that applies, and the heir's own inputs.
 
-Write a short, neutral comparison of 4 to 6 short sentences.
+Write a short, neutral comparison as 4 to 6 points, one per line, each line starting with "- ".
+Each point is one short sentence.
 - Name each scenario by its label with its estimated total tax and the amount kept after tax.
 - State the one rule that applies: the deadline (rule.deadline_date) and whether a minimum must be taken \
 each year (rule.annual_minimums_required).
