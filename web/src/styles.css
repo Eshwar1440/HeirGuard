@@ -1,0 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap');
+
+html, body, #root { height: 100%; margin: 0; }
+body { background: #F3F5F7; color: #1A2533; }
+a { color: #1F6FC5; }
+a:hover { color: #0B2240; }
