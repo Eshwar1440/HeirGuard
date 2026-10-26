@@ -167,8 +167,12 @@ def test_submit_for_review_is_refused_while_a_check_fails(flow):
 
 def test_returned_by_estate_ops_goes_back_to_the_heir(flow):
     case_id = service.create_case("packet_01_fixed").case.case_id
+    with pytest.raises(FlowError, match="reason"):
+        service.approve(case_id, approved=False)
     view = service.approve(case_id, approved=False, note="Please confirm the date of death.")
     assert view.waiting_for == "heir_fix" and not view.case.approved
+    assert view.review_note == "Please confirm the date of death."
+    assert service.get_case(case_id).review_note == "Please confirm the date of death."
 
 
 @pytest.mark.parametrize(("choice", "status"), [("talk", "handed_off"), ("transfer", "transfer_requested")])
