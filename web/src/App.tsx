@@ -69,7 +69,7 @@ export default function App() {
 
       <Box sx={{ height: APPBAR_H, flex: 'none' }} />
       <Stack direction="row" spacing={2} sx={{ alignItems: 'center', height: CASEBAR_H, flex: 'none', bgcolor: '#fff', borderBottom: `1px solid ${t.rule}`, px: 3.5, mr: drawerOpen ? `${DRAWER_WIDTH}px` : 0 }}>
-        <Typography variant="overline">Demo case</Typography>
+        <Typography variant="overline" sx={{ whiteSpace: 'nowrap' }}>Demo case</Typography>
         <Stack direction="row" spacing={1}>
           {DEMO_SAMPLES.map((s) => {
             const on = sampleId === s.id;
@@ -84,7 +84,7 @@ export default function App() {
         {decedent && (
           <Stack direction="row" spacing={1.75} sx={{ alignItems: 'center', ml: 'auto !important', fontSize: 13, color: t.muted, whiteSpace: 'nowrap' }}>
             <span>Decedent <strong style={{ color: t.ink }}>{decedent.name}</strong></span>
-            {account && <><Box sx={{ width: '1px', height: 14, bgcolor: t.rule }} /><span>{account.title || account.type}</span>
+            {account && <>{!drawerOpen && <><Box sx={{ width: '1px', height: 14, bgcolor: t.rule }} /><span>{account.title || account.type}</span></>}
               <Box sx={{ width: '1px', height: 14, bgcolor: t.rule }} />
               <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}><strong style={{ color: t.ink }}>{formatMoney(account.balance, { cents: true })}</strong><HypotheticalChip /></Stack></>}
           </Stack>
