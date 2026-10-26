@@ -4,3 +4,13 @@ html, body, #root { height: 100%; margin: 0; }
 body { background: #F3F5F7; color: #1A2533; }
 a { color: #1F6FC5; }
 a:hover { color: #0B2240; }
+
+/* Printing the professional summary prints only the open dialog. */
+@media print {
+  body { overflow: visible !important; background: #fff; }
+  #root, .MuiBackdrop-root, .no-print { display: none !important; }
+  .MuiDialog-root { position: static !important; }
+  .MuiDialog-container { display: block !important; height: auto !important; }
+  .MuiDialog-paper { box-shadow: none !important; max-height: none !important; max-width: none !important; width: auto !important; margin: 0 !important; }
+  .MuiDialogContent-root { overflow: visible !important; border: 0 !important; }
+}
