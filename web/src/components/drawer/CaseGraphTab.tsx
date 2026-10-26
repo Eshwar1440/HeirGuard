@@ -59,7 +59,7 @@ export default function CaseGraphTab({ caseId }: { caseId: string }) {
   return (
     <Stack spacing={1.25} data-testid="tab-graph">
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography variant="caption">GET /cases/{caseId}/graph · {data.nodes.length} of {full!.nodes.length} nodes · {data.edges.length} edges{failed ? ` · ${failed} failed` : ''}</Typography>
+        <Typography variant="caption">{caseId} · {data.nodes.length} of {full!.nodes.length} nodes · {data.edges.length} edges{failed ? ` · ${failed} failed` : ''}</Typography>
         <FormControlLabel control={<Switch size="small" checked={everyField} onChange={(e) => setEveryField(e.target.checked)} />}
           label={<Typography variant="caption">Show every field</Typography>} sx={{ mr: 0 }} />
       </Stack>
