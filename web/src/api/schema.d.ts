@@ -72,23 +72,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/cases/{case_id}/fields/{field}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Correct Field */
-        patch: operations["correct_field_cases__case_id__fields__field__patch"];
-        trace?: never;
-    };
     "/cases/{case_id}/submit-for-review": {
         parameters: {
             query?: never;
@@ -495,13 +478,6 @@ export interface components {
             /** Page */
             page: number;
         };
-        /** FieldCorrection */
-        FieldCorrection: {
-            /** Document Id */
-            document_id: string;
-            /** Value */
-            value: string;
-        };
         /** GuideText */
         GuideText: {
             /**
@@ -773,42 +749,6 @@ export interface operations {
         requestBody: {
             content: {
                 "multipart/form-data": components["schemas"]["Body_upload_documents_cases__case_id__documents_post"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CaseView"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    correct_field_cases__case_id__fields__field__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                case_id: string;
-                field: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["FieldCorrection"];
             };
         };
         responses: {

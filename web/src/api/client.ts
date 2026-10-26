@@ -30,7 +30,6 @@ const json = (method: string, body?: unknown): RequestInit => ({
 export const api = {
   get: <T>(path: string) => request<T>(path),
   post: <T>(path: string, body?: unknown) => request<T>(path, json('POST', body)),
-  patch: <T>(path: string, body?: unknown) => request<T>(path, json('PATCH', body)),
   upload: <T>(path: string, files: File[]) => {
     const fd = new FormData();
     files.forEach((f) => fd.append('files', f));
