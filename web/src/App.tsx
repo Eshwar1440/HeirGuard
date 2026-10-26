@@ -52,9 +52,13 @@ export default function App() {
       <AppBar position="fixed" sx={{ zIndex: (th) => th.zIndex.drawer + 1 }}>
         <Toolbar sx={{ minHeight: '60px !important', px: '28px !important', justifyContent: 'space-between' }}>
           <Stack direction="row" spacing={1.75} sx={{ alignItems: 'center' }}>
-            <Box aria-hidden sx={{ width: 22, height: 22, transform: 'rotate(45deg)', border: '2px solid #6BBBEF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Box sx={{ width: 6, height: 6, bgcolor: '#E8B45A' }} />
-            </Box>
+            <Box
+              component="img"
+              src="/heirguard-icon.png"
+              alt=""
+              aria-hidden
+              sx={{ width: 36, height: 36, objectFit: 'contain' }}
+            />
             <Typography component="h1" sx={{ fontFamily: t.serif, fontSize: 21, fontWeight: 600, whiteSpace: 'nowrap' }}>{APP_NAME}</Typography>
             <Box sx={{ width: '1px', height: 22, bgcolor: 'rgba(255,255,255,.25)' }} />
             <Typography sx={{ fontSize: 13, color: '#C9D6E3', whiteSpace: 'nowrap' }}>Inherited account guide</Typography>
