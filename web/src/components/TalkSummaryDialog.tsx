@@ -1,9 +1,9 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import type { CaseState } from '../api/types';
 import { FOOTER_TEXT } from '../config';
-import { heirOf, optionsSummary } from '../lib/case';
+import { heirOf, optionsSummary, summaryPoints } from '../lib/case';
 import { ACCOUNT_TYPE_LABELS, FILING_LABELS, formatDate, formatMoney, formatPercent, plainValue, scenarioLabel } from '../lib/format';
-import { KeyValueRows } from './common';
+import { KeyValueRows, SummaryPoints } from './common';
 import { tokens as t } from '../theme';
 
 /**
@@ -16,7 +16,7 @@ export default function TalkSummaryDialog({ caseState, open, onClose }: { caseSt
   const account = (caseState.accounts ?? [])[0];
   const sim = caseState.simulation;
   const inputs = caseState.heir_inputs;
-  const points = (optionsSummary(caseState)?.text ?? '').split('\n').map((l) => l.trim().replace(/^[-•*]\s*/, '')).filter(Boolean);
+  const points = summaryPoints(optionsSummary(caseState)?.text);
   const today = new Date().toISOString().slice(0, 10);
 
   return (
@@ -70,9 +70,7 @@ export default function TalkSummaryDialog({ caseState, open, onClose }: { caseSt
               </Table>
             </Box>
             {points.length > 0 && (
-              <Box component="ul" sx={{ m: 0, mt: 1.5, pl: 2.25, '& li': { fontSize: 13.5, lineHeight: 1.5, mb: 0.4, color: t.body } }}>
-                {points.map((p) => <li key={p}>{p}</li>)}
-              </Box>
+              <Box sx={{ mt: 1.5 }}><SummaryPoints points={points} size={13.5} /></Box>
             )}
           </Section>
         )}

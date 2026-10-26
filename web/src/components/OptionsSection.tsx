@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { Box, Button, Card, InputAdornment, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import type { CaseState, FilingStatus, HeirInputs } from '../api/types';
 import { useSimulate } from '../api/hooks';
-import { heirOf, optionsSummary } from '../lib/case';
+import { heirOf, optionsSummary, summaryPoints } from '../lib/case';
 import { FILING_LABELS, formatMoney, formatPercent } from '../lib/format';
 import ScenarioChart from './ScenarioChart';
 import ScheduleTable from './ScheduleTable';
-import { Banner, ErrorCard, Placeholder, SectionHeader } from './common';
+import { Banner, ErrorCard, Placeholder, SectionHeader, SummaryPoints } from './common';
 import { tokens as t } from '../theme';
 
 interface Props { caseState: CaseState; chartVariant?: 'grouped' | 'stacked' }
@@ -27,7 +27,7 @@ export default function OptionsSection({ caseState, chartVariant }: Props) {
   const scenarios = caseState.scenarios ?? [];
   const summary = optionsSummary(caseState)?.text;
   // The writer (M5) puts one point per line, each starting with "- ".
-  const points = (summary ?? '').split('\n').map((l) => l.trim().replace(/^[-•*]\s*/, '')).filter(Boolean);
+  const points = summaryPoints(summary);
   useEffect(() => {
     if (scenarios.length && !scenarios.some((s) => s.name === selected)) setSelected(scenarios[0].name);
   }, [scenarios, selected]);
@@ -121,9 +121,7 @@ export default function OptionsSection({ caseState, chartVariant }: Props) {
             {summary && (
               <Box sx={{ borderLeft: `3px solid ${t.accent}`, pl: 2, py: 0.5 }} data-testid="options-summary">
                 {points.length > 1 ? (
-                  <Box component="ul" sx={{ m: 0, pl: 2.25, maxWidth: 760, '& li': { fontSize: 14.5, lineHeight: 1.55, mb: 0.5, textWrap: 'pretty' } }}>
-                    {points.map((point) => <li key={point}>{point}</li>)}
-                  </Box>
+                  <SummaryPoints points={points} />
                 ) : (
                   <Typography sx={{ maxWidth: 760, textWrap: 'pretty' }}>{summary}</Typography>
                 )}
