@@ -9,6 +9,7 @@ const READ_TIMEOUT = 60_000;
 
 async function startCase(page: Page, sample: string) {
   await page.goto('/');
+  await page.getByTestId('case-select').click();
   await page.getByTestId(`sample-${sample}`).click();
   await expect(page.getByTestId('reading-progress')).toBeVisible();
   await expect(page.getByTestId('reading-progress')).toBeHidden({ timeout: READ_TIMEOUT });
