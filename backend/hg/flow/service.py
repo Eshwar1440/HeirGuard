@@ -86,7 +86,7 @@ def _view(case_id: str) -> CaseView:
     values = snap.values
     waiting = _waiting_for(snap)
     case = CaseState.model_validate(values["case"])
-    if waiting:
+    if waiting and not (waiting == CHOICE and case.choice):  # after a choice, its status stands
         case = case.model_copy(update={"status": _STATUS_WHILE_WAITING[waiting]})
     return CaseView(case=case, heir_id=values.get("heir_id"), waiting_for=waiting,
                     simulation=values.get("simulation"), handoff=values.get("handoff"))
