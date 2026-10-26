@@ -33,8 +33,8 @@ Rules:
 - confidence is your probability, from 0 to 1, that the value is exactly what is printed.
 - page is the 1-based page number where the value appears.
 - Choose one doc_type. Return each field listed for that type once, and no other fields.
-- certified_copy is "no" if a copy marker (for example "COPY - NOT CERTIFIED") is present or if the registrar's certification or seal text is missing. It is "yes" only when the certification and seal text are present.
-- A watermark such as "SPECIMEN - HYPOTHETICAL DATA" is not a copy marker.
+- certified_copy reports only what the upload shows. Nobody can confirm a certified copy from an image, and a raised seal does not show in a scan. It is "no" if you see any sign that this is not a certified copy: a pattern repeated across the background such as VOID or COPY (security paper shows this when it is photocopied), a printed note that the copy is uncertified, informational or not valid for legal purposes, or no registrar's certification statement and signature. It is "yes" when the registrar's certification is visible and none of those signs is. If you cannot tell, return null with a low confidence. Its confidence is how sure you are about what is visible, not whether the copy is genuine.
+- The diagonal "SPECIMEN - HYPOTHETICAL DATA" watermark is not a copy sign, and the word "void" inside a printed sentence is not a background pattern.
 - Normalize values: dates as YYYY-MM-DD; percentages as a plain number without the % sign; relationship, designation and affiant capacity in lowercase; account_type as one of traditional_ira, roth_ira, tod_brokerage, joint, individual, trust_owned; names and other text exactly as printed.
 - If the document is a will, use doc_type "will" and return no fields. If it is none of the listed types, use "unknown" and return no fields."""
 

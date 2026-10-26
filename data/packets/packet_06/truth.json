@@ -1,6 +1,6 @@
 {
   "packet_id": "packet_06",
-  "description": "A sibling less than 10 years younger inherits a traditional IRA. The death certificate is a photocopy marked COPY - NOT CERTIFIED.",
+  "description": "A sibling less than 10 years younger inherits a traditional IRA. The death certificate is a photocopy of a certified copy: the printed certification shows, but so does the security paper's VOID pattern.",
   "notice": "SPECIMEN - HYPOTHETICAL DATA. No real person, account or record.",
   "decedent": {
     "id": "packet_06-d1",
@@ -177,7 +177,7 @@
   "planted_error_details": [
     {
       "rule_id": "certified_copy",
-      "note": "Death certificate is a photocopy marked COPY - NOT CERTIFIED, with no registrar seal.",
+      "note": "Death certificate is a photocopy of a certified copy: the printed certification is there, but the security paper's VOID pattern shows through.",
       "document_id": "packet_06-death_certificate",
       "beneficiary_id": null
     }

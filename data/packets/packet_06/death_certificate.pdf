@@ -25,6 +25,8 @@ endobj
 /Contents 9 0 R /MediaBox [ 0 0 612 792 ] /Parent 8 0 R /Resources <<
 /ExtGState <<
 /gRLs0 <<
+/ca .3
+>> /gRLs1 <<
 /ca .22
 >>
 >> /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
@@ -52,7 +54,7 @@ endobj
 endobj
 9 0 obj
 <<
-/Length 3210
+/Length 5318
 >>
 stream
 1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
@@ -153,17 +155,76 @@ BT 1 0 0 1 54 430.5 Tm (Certification) Tj T* ET
 .7 .73 .77 RG
 .6 w
 n 54 424.5 m 558 424.5 l S
+.12 .16 .22 RG
+1.4 w
+n
+544 358.5 m
+544 383.9051 523.4051 404.5 498 404.5 c
+472.5949 404.5 452 383.9051 452 358.5 c
+452 333.0949 472.5949 312.5 498 312.5 c
+523.4051 312.5 544 333.0949 544 358.5 c
+S
+n
+538 358.5 m
+538 380.5914 520.0914 398.5 498 398.5 c
+475.9086 398.5 458 380.5914 458 358.5 c
+458 336.4086 475.9086 318.5 498 318.5 c
+520.0914 318.5 538 336.4086 538 358.5 c
+S
 .12 .16 .22 rg
-BT /F1 9.5 Tf 11.4 TL ET
-BT 1 0 0 1 54 408.5 Tm (This reproduction was made from a document provided by the requester.) Tj T* ET
+BT /F2 7 Tf 8.4 TL ET
+BT 1 0 0 1 471.554 362.5 Tm (OFFICIAL SEAL) Tj T* ET
+BT 1 0 0 1 463.581 352.5 Tm (OF THE REGISTRAR) Tj T* ET
+BT /F2 10 Tf 12 TL ET
+BT 1 0 0 1 54 394.5 Tm (CERTIFIED COPY OF VITAL RECORD) Tj T* ET
+BT /F1 8.5 Tf 10.2 TL ET
+BT 1 0 0 1 54 380.5 Tm (I certify that this is a true and correct copy of the official record) Tj T* ET
+BT /F1 8.5 Tf 10.2 TL ET
+BT 1 0 0 1 54 366.5 Tm (registered in Wong County, Colorado.) Tj T* ET
+BT /F1 8.5 Tf 10.2 TL ET
+BT 1 0 0 1 54 352.5 Tm (Local Registrar: Paul Ruiz) Tj T* ET
+BT /F1 8.5 Tf 10.2 TL ET
+BT 1 0 0 1 54 338.5 Tm (Valid only with the raised seal of the registrar.) Tj T* ET
 q
-.990268 -0.139173 .139173 .990268 428 347 cm
-.78 .1 .1 RG
-.78 .1 .1 rg
-2.2 w
-n -110 -18 220 40 re S
-BT /F2 16 Tf 19.2 TL ET
-BT 1 0 0 1 -91.12 -4 Tm (COPY - NOT CERTIFIED) Tj T* ET
+.45 .45 .45 rg
+/gRLs0 gs
+BT /F2 30 Tf 36 TL ET
+BT 1 0 0 1 40 70 Tm (VOID) Tj T* ET
+BT 1 0 0 1 170 70 Tm (VOID) Tj T* ET
+BT 1 0 0 1 300 70 Tm (VOID) Tj T* ET
+BT 1 0 0 1 430 70 Tm (VOID) Tj T* ET
+BT 1 0 0 1 560 70 Tm (VOID) Tj T* ET
+BT 1 0 0 1 100 160 Tm (VOID) Tj T* ET
+BT 1 0 0 1 230 160 Tm (VOID) Tj T* ET
+BT 1 0 0 1 360 160 Tm (VOID) Tj T* ET
+BT 1 0 0 1 490 160 Tm (VOID) Tj T* ET
+BT 1 0 0 1 40 250 Tm (VOID) Tj T* ET
+BT 1 0 0 1 170 250 Tm (VOID) Tj T* ET
+BT 1 0 0 1 300 250 Tm (VOID) Tj T* ET
+BT 1 0 0 1 430 250 Tm (VOID) Tj T* ET
+BT 1 0 0 1 560 250 Tm (VOID) Tj T* ET
+BT 1 0 0 1 100 340 Tm (VOID) Tj T* ET
+BT 1 0 0 1 230 340 Tm (VOID) Tj T* ET
+BT 1 0 0 1 360 340 Tm (VOID) Tj T* ET
+BT 1 0 0 1 490 340 Tm (VOID) Tj T* ET
+BT 1 0 0 1 40 430 Tm (VOID) Tj T* ET
+BT 1 0 0 1 170 430 Tm (VOID) Tj T* ET
+BT 1 0 0 1 300 430 Tm (VOID) Tj T* ET
+BT 1 0 0 1 430 430 Tm (VOID) Tj T* ET
+BT 1 0 0 1 560 430 Tm (VOID) Tj T* ET
+BT 1 0 0 1 100 520 Tm (VOID) Tj T* ET
+BT 1 0 0 1 230 520 Tm (VOID) Tj T* ET
+BT 1 0 0 1 360 520 Tm (VOID) Tj T* ET
+BT 1 0 0 1 490 520 Tm (VOID) Tj T* ET
+BT 1 0 0 1 40 610 Tm (VOID) Tj T* ET
+BT 1 0 0 1 170 610 Tm (VOID) Tj T* ET
+BT 1 0 0 1 300 610 Tm (VOID) Tj T* ET
+BT 1 0 0 1 430 610 Tm (VOID) Tj T* ET
+BT 1 0 0 1 560 610 Tm (VOID) Tj T* ET
+BT 1 0 0 1 100 700 Tm (VOID) Tj T* ET
+BT 1 0 0 1 230 700 Tm (VOID) Tj T* ET
+BT 1 0 0 1 360 700 Tm (VOID) Tj T* ET
+BT 1 0 0 1 490 700 Tm (VOID) Tj T* ET
 Q
 .38 .42 .48 rg
 BT /F1 7 Tf 8.4 TL ET
@@ -172,7 +233,7 @@ BT 1 0 0 1 522.195 30 Tm (Page 1 of 1) Tj T* ET
 q
 .707107 .707107 -0.707107 .707107 306 396 cm
 .55 .55 .55 rg
-/gRLs0 gs
+/gRLs1 gs
 BT /F2 40 Tf 48 TL ET
 BT 1 0 0 1 -338.9 0 Tm (SPECIMEN - HYPOTHETICAL DATA) Tj T* ET
 Q
@@ -187,10 +248,10 @@ xref
 0000000219 00000 n 
 0000000331 00000 n 
 0000000441 00000 n 
-0000000672 00000 n 
-0000000740 00000 n 
-0000001055 00000 n 
-0000001114 00000 n 
+0000000692 00000 n 
+0000000760 00000 n 
+0000001075 00000 n 
+0000001134 00000 n 
 trailer
 <<
 /ID 
@@ -202,5 +263,5 @@ trailer
 /Size 10
 >>
 startxref
-4375
+6503
 %%EOF

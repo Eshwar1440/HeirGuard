@@ -2,7 +2,7 @@
 
 > All documents are synthetic specimens with hypothetical data. Ground truth is each packet's `truth.json` from the M1 generator.
 
-- Run: 2026-10-26 04:49 UTC
+- Run: 2026-10-26 05:20 UTC
 - Model: `claude-sonnet-5-5` via `hg.llm.extract_json` (every call is in `ai_log/*.jsonl`)
 - Packets: 11; documents: 36; fields scored: 347
 - Review threshold: confidence below 0.85 (CONFIDENCE_THRESHOLD, hypothetical) or a null value
@@ -40,14 +40,14 @@
 | affidavit_of_domicile.domicile_address | 2/2 (100.0%) | 0.96 |
 | affidavit_of_domicile.notary_date | 2/2 (100.0%) | 0.90 |
 | death_certificate.certificate_number | 11/11 (100.0%) | 0.97 |
-| death_certificate.certified_copy | 11/11 (100.0%) | 0.96 |
-| death_certificate.date_issued | 11/11 (100.0%) | 0.98 |
-| death_certificate.date_of_birth | 11/11 (100.0%) | 0.98 |
-| death_certificate.date_of_death | 11/11 (100.0%) | 0.98 |
+| death_certificate.certified_copy | 11/11 (100.0%) | 0.87 |
+| death_certificate.date_issued | 11/11 (100.0%) | 0.97 |
+| death_certificate.date_of_birth | 11/11 (100.0%) | 0.97 |
+| death_certificate.date_of_death | 11/11 (100.0%) | 0.97 |
 | death_certificate.decedent_name | 11/11 (100.0%) | 0.98 |
-| death_certificate.issuing_county | 11/11 (100.0%) | 0.97 |
+| death_certificate.issuing_county | 11/11 (100.0%) | 0.96 |
 | death_certificate.issuing_state | 11/11 (100.0%) | 0.98 |
-| death_certificate.place_of_death | 11/11 (100.0%) | 0.97 |
+| death_certificate.place_of_death | 11/11 (100.0%) | 0.96 |
 | inherited_ira_application.account_title | 19/19 (100.0%) | 0.97 |
 | inherited_ira_application.account_type | 19/19 (100.0%) | 0.97 |
 | inherited_ira_application.beneficiary_date_of_birth | 19/19 (100.0%) | 0.97 |
@@ -60,7 +60,7 @@
 | inherited_ira_application.signature_date | 19/19 (100.0%) | 0.98 |
 | inherited_ira_application.signature_name | 19/19 (100.0%) | 0.98 |
 | letters_testamentary.case_number | 3/3 (100.0%) | 0.97 |
-| letters_testamentary.court_county | 3/3 (100.0%) | 0.98 |
+| letters_testamentary.court_county | 3/3 (100.0%) | 0.97 |
 | letters_testamentary.court_name | 3/3 (100.0%) | 0.98 |
 | letters_testamentary.date_issued | 3/3 (100.0%) | 0.98 |
 | letters_testamentary.date_of_death | 3/3 (100.0%) | 0.98 |
@@ -95,4 +95,5 @@ No misses.
 
 - The packets are clean, machine-generated PDFs with a text layer. They do not test scans, phone photos, handwriting, skew, stamps over text or low resolution, so real-world accuracy will be lower. Treat these numbers as a best case.
 - Each packet uses the same five specimen layouts; unfamiliar layouts are not tested.
+- certified_copy records visible signs that a certificate is a copy (a VOID background pattern, an "uncertified" notice). It cannot confirm a certified copy: a raised seal does not show in a scan. In these PDFs the VOID pattern is also in the text layer; in a real scan it is only pixels.
 - Confidence is the model's own estimate. A high-confidence wrong value is the dangerous case, which is why silent errors are reported separately and every field still passes through the rule checks.

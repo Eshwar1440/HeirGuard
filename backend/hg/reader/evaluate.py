@@ -229,6 +229,9 @@ def render(results: list[DocResult], truths: list[PacketTruth]) -> str:
         "photos, handwriting, skew, stamps over text or low resolution, so real-world accuracy will be lower. "
         "Treat these numbers as a best case.",
         "- Each packet uses the same five specimen layouts; unfamiliar layouts are not tested.",
+        "- certified_copy records visible signs that a certificate is a copy (a VOID background pattern, an "
+        "\"uncertified\" notice). It cannot confirm a certified copy: a raised seal does not show in a scan. In "
+        "these PDFs the VOID pattern is also in the text layer; in a real scan it is only pixels.",
         "- Confidence is the model's own estimate. A high-confidence wrong value is the dangerous case, which is "
         "why silent errors are reported separately and every field still passes through the rule checks.",
     ]

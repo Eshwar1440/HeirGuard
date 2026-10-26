@@ -79,6 +79,8 @@ def test_reads_a_packet_document(mock_llm):
     assert call["blocks"][0]["source"]["media_type"] == "application/pdf"
     assert "death_certificate.pdf" not in json.dumps(call["blocks"][1])  # no filename hint
     assert "Never guess" in call["system"]
+    assert "COPY - NOT CERTIFIED" not in call["system"]  # real photocopies carry no such stamp
+    assert "VOID" in call["system"] and "uncertified" in call["system"]
 
 
 def test_low_confidence_field_sets_needs_review(mock_llm):
