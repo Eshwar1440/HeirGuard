@@ -1,12 +1,14 @@
 import { Button, Stack, Typography } from '@mui/material';
 import type { CaseState } from '../../api/types';
-import { isReading, useApprove } from '../../api/hooks';
+import { isReading, useApprove, useLoadSampleDocuments } from '../../api/hooks';
 import { allPass, failCount } from '../../lib/case';
 import { ErrorCard, KeyValueRows, Mono } from '../common';
 import { tokens as t } from '../../theme';
 
 export default function EstateOpsTab({ caseState }: { caseState: CaseState }) {
   const approve = useApprove(caseState.case_id);
+  const sample = useLoadSampleDocuments(caseState.case_id);
+  const noDocuments = !caseState.documents.length && caseState.waiting_for === 'heir_fix';
   const pass = allPass(caseState);
   const fails = failCount(caseState);
   const reading = isReading(caseState);
@@ -34,6 +36,15 @@ export default function EstateOpsTab({ caseState }: { caseState: CaseState }) {
       </Button>
       <Typography variant="caption">{note}</Typography>
       {approve.isError && <ErrorCard title="Approval failed" message={(approve.error as Error).message} />}
+      {noDocuments && (
+        <Stack spacing={1} sx={{ borderTop: `1px solid ${t.rule}`, pt: 1.75 }}>
+          <Typography variant="body2">Demo shortcut: read this case's sample packet as if the heir had uploaded it.</Typography>
+          <Button variant="outlined" onClick={() => sample.mutate()} disabled={sample.isPending} data-testid="load-sample-documents">
+            {sample.isPending ? 'Reading the sample packet…' : "Load this case's sample documents"}
+          </Button>
+          {sample.isError && <ErrorCard title="Couldn't load the sample" message={(sample.error as Error).message} />}
+        </Stack>
+      )}
     </Stack>
   );
 }
