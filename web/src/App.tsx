@@ -67,7 +67,7 @@ export default function App() {
                 {APP_NAME.toUpperCase()}
               </Typography>
               <Typography sx={{ color: '#9FC7EC', fontSize: 9.5, fontWeight: 600, letterSpacing: 1.65, lineHeight: 1.2 }}>
-                INHERITED SERVICES · CONCEPT
+                INHERITED SERVICES
               </Typography>
             </Stack>
             <Box sx={{ width: '1px', height: 22, bgcolor: 'rgba(255,255,255,.25)' }} />
