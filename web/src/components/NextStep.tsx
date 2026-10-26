@@ -8,8 +8,8 @@ import { tokens as t } from '../theme';
 
 const CARDS: { key: Choice; title: string; body: string; note: string }[] = [
   { key: 'keep', title: 'Keep at Schwab', body: 'Open an inherited IRA with your share. The application is prefilled from your verified documents, and you review every field.', note: 'Application prepared.' },
-  { key: 'talk', title: 'Talk to a professional', body: 'Share this summary with a tax professional or advisor before deciding. Nothing moves until you choose.', note: 'A shareable summary is ready. Your options stay open.' },
-  { key: 'transfer', title: 'Transfer out', body: 'Move your share to another firm with a trustee-to-trustee transfer. The paperwork is prepared for you and nothing is held.', note: 'Transfer paperwork is ready. Your options stay open.' },
+  { key: 'talk', title: 'Talk to a professional', body: 'Share this summary with a tax professional or advisor before deciding. Nothing moves until you choose.', note: 'A shareable summary is ready.' },
+  { key: 'transfer', title: 'Transfer out', body: 'Move your share to another firm with a trustee-to-trustee transfer. The paperwork is prepared for you and nothing is held.', note: 'Transfer paperwork is ready.' },
 ];
 
 export default function NextStep({ caseState }: { caseState: CaseState }) {
