@@ -1,0 +1,198 @@
+{
+  "packet_id": "packet_08",
+  "description": "A spouse inherits a traditional IRA and the decedent also held a trust-owned account. The trust certification is missing and the death certificate is a photocopy.",
+  "notice": "SPECIMEN - HYPOTHETICAL DATA. No real person, account or record.",
+  "decedent": {
+    "id": "packet_08-d1",
+    "name": "Amber Davis",
+    "date_of_birth": "1946-06-17",
+    "date_of_death": "2025-06-13",
+    "rmds_started": true
+  },
+  "accounts": [
+    {
+      "id": "packet_08-a1",
+      "type": "traditional_ira",
+      "title": "Traditional IRA of Amber Davis, deceased",
+      "balance": "178152.47"
+    },
+    {
+      "id": "packet_08-a2",
+      "type": "trust_owned",
+      "title": "The Davis Family Trust, dated 07/10/2017",
+      "balance": "710149.81"
+    }
+  ],
+  "beneficiaries": [
+    {
+      "id": "packet_08-b1",
+      "name": "Melissa Davis",
+      "date_of_birth": "1948-05-12",
+      "relationship": "spouse",
+      "share_percent": "100",
+      "designation": "primary",
+      "account_id": "packet_08-a1",
+      "beneficiary_class": "spouse",
+      "disabled": null,
+      "chronically_ill": null
+    }
+  ],
+  "documents": [
+    {
+      "id": "packet_08-death_certificate",
+      "case_id": "packet_08",
+      "file_ref": "packet_08/death_certificate.pdf",
+      "doc_type": "death_certificate",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Amber Davis",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_birth",
+          "value": "1946-06-17",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_death",
+          "value": "2025-06-13",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "place_of_death",
+          "value": "Susanbury",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "issuing_county",
+          "value": "Lee County",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "issuing_state",
+          "value": "Maine",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certificate_number",
+          "value": "2025-993-596454",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_issued",
+          "value": "2025-07-04",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certified_copy",
+          "value": "no",
+          "confidence": 1.0,
+          "page": 1
+        }
+      ],
+      "needs_review": false
+    },
+    {
+      "id": "packet_08-inherited_ira_application-b1",
+      "case_id": "packet_08",
+      "file_ref": "packet_08/inherited_ira_application_b1.pdf",
+      "doc_type": "inherited_ira_application",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Amber Davis",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "decedent_date_of_death",
+          "value": "2025-06-13",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_type",
+          "value": "traditional_ira",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_title",
+          "value": "Traditional IRA of Amber Davis, deceased",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_name",
+          "value": "Melissa Davis",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_date_of_birth",
+          "value": "1948-05-12",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "relationship",
+          "value": "spouse",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "designation",
+          "value": "primary",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "share_percent",
+          "value": "100",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "signature_name",
+          "value": "Melissa Davis",
+          "confidence": 1.0,
+          "page": 2
+        },
+        {
+          "name": "signature_date",
+          "value": "2025-08-14",
+          "confidence": 1.0,
+          "page": 2
+        }
+      ],
+      "needs_review": false
+    }
+  ],
+  "planted_errors": [
+    "required_docs_present",
+    "certified_copy"
+  ],
+  "planted_error_details": [
+    {
+      "rule_id": "required_docs_present",
+      "note": "Required trust_certification is missing for the trust-owned account.",
+      "document_id": null,
+      "beneficiary_id": null
+    },
+    {
+      "rule_id": "certified_copy",
+      "note": "Death certificate is a photocopy marked COPY - NOT CERTIFIED, with no registrar seal.",
+      "document_id": "packet_08-death_certificate",
+      "beneficiary_id": null
+    }
+  ]
+}

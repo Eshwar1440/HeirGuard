@@ -1,0 +1,78 @@
+[
+  {
+    "packet_id": "packet_01_flawed",
+    "description": "Demo case. An adult child and their sibling inherit a traditional IRA from a parent who had started RMDs. The applications list shares of 50% and 49.5%.",
+    "planted_errors": [
+      "shares_total_100"
+    ]
+  },
+  {
+    "packet_id": "packet_01_fixed",
+    "description": "Demo case, corrected. Same family and documents; the second application now lists 50%.",
+    "planted_errors": []
+  },
+  {
+    "packet_id": "packet_02",
+    "description": "Two adult children inherit a traditional IRA. Their applications list 60% and 30%.",
+    "planted_errors": [
+      "shares_total_100"
+    ]
+  },
+  {
+    "packet_id": "packet_03",
+    "description": "Two adult children inherit a traditional IRA. The letters testamentary misspell the executor's (first heir's) name.",
+    "planted_errors": [
+      "name_match"
+    ]
+  },
+  {
+    "packet_id": "packet_04",
+    "description": "One adult child inherits a Roth IRA. The application shows a date of death one day off from the death certificate.",
+    "planted_errors": [
+      "dod_consistent"
+    ]
+  },
+  {
+    "packet_id": "packet_05",
+    "description": "Two adult children inherit a traditional IRA from a parent who died before RMDs began. The second child's application is missing.",
+    "planted_errors": [
+      "required_docs_present"
+    ]
+  },
+  {
+    "packet_id": "packet_06",
+    "description": "A sibling less than 10 years younger inherits a traditional IRA. The death certificate is a photocopy marked COPY - NOT CERTIFIED.",
+    "planted_errors": [
+      "certified_copy"
+    ]
+  },
+  {
+    "packet_id": "packet_07",
+    "description": "An adult child and a grandchild inherit a traditional IRA. The affidavit of domicile misspells the child's name and the letters testamentary show a different date of death.",
+    "planted_errors": [
+      "name_match",
+      "dod_consistent"
+    ]
+  },
+  {
+    "packet_id": "packet_08",
+    "description": "A spouse inherits a traditional IRA and the decedent also held a trust-owned account. The trust certification is missing and the death certificate is a photocopy.",
+    "planted_errors": [
+      "required_docs_present",
+      "certified_copy"
+    ]
+  },
+  {
+    "packet_id": "packet_09",
+    "description": "Three adult children inherit a traditional IRA at 33.33% each (99.99% total). The third application shows a date of death one day off. RMD status is not stated.",
+    "planted_errors": [
+      "shares_total_100",
+      "dod_consistent"
+    ]
+  },
+  {
+    "packet_id": "packet_10",
+    "description": "Clean packet. Two adult children inherit a traditional IRA; the decedent also held a trust-owned account. Letters, affidavit and trust certification are all consistent.",
+    "planted_errors": []
+  }
+]

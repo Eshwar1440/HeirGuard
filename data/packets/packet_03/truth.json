@@ -1,0 +1,323 @@
+{
+  "packet_id": "packet_03",
+  "description": "Two adult children inherit a traditional IRA. The letters testamentary misspell the executor's (first heir's) name.",
+  "notice": "SPECIMEN - HYPOTHETICAL DATA. No real person, account or record.",
+  "decedent": {
+    "id": "packet_03-d1",
+    "name": "Roger Ferguson",
+    "date_of_birth": "1943-11-25",
+    "date_of_death": "2024-10-27",
+    "rmds_started": true
+  },
+  "accounts": [
+    {
+      "id": "packet_03-a1",
+      "type": "traditional_ira",
+      "title": "Traditional IRA of Roger Ferguson, deceased",
+      "balance": "266781.37"
+    }
+  ],
+  "beneficiaries": [
+    {
+      "id": "packet_03-b1",
+      "name": "Joseph Ferguson",
+      "date_of_birth": "1976-06-14",
+      "relationship": "child",
+      "share_percent": "50",
+      "designation": "primary",
+      "account_id": "packet_03-a1",
+      "beneficiary_class": "designated",
+      "disabled": null,
+      "chronically_ill": null
+    },
+    {
+      "id": "packet_03-b2",
+      "name": "Dylan Ferguson",
+      "date_of_birth": "1983-03-19",
+      "relationship": "child",
+      "share_percent": "50",
+      "designation": "primary",
+      "account_id": "packet_03-a1",
+      "beneficiary_class": "designated",
+      "disabled": null,
+      "chronically_ill": null
+    }
+  ],
+  "documents": [
+    {
+      "id": "packet_03-death_certificate",
+      "case_id": "packet_03",
+      "file_ref": "packet_03/death_certificate.pdf",
+      "doc_type": "death_certificate",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Roger Ferguson",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_birth",
+          "value": "1943-11-25",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_death",
+          "value": "2024-10-27",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "place_of_death",
+          "value": "Steveburgh",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "issuing_county",
+          "value": "Le County",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "issuing_state",
+          "value": "Iowa",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certificate_number",
+          "value": "2024-382-459131",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_issued",
+          "value": "2024-11-11",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certified_copy",
+          "value": "yes",
+          "confidence": 1.0,
+          "page": 1
+        }
+      ],
+      "needs_review": false
+    },
+    {
+      "id": "packet_03-inherited_ira_application-b1",
+      "case_id": "packet_03",
+      "file_ref": "packet_03/inherited_ira_application_b1.pdf",
+      "doc_type": "inherited_ira_application",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Roger Ferguson",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "decedent_date_of_death",
+          "value": "2024-10-27",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_type",
+          "value": "traditional_ira",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_title",
+          "value": "Traditional IRA of Roger Ferguson, deceased",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_name",
+          "value": "Joseph Ferguson",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_date_of_birth",
+          "value": "1976-06-14",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "relationship",
+          "value": "child",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "designation",
+          "value": "primary",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "share_percent",
+          "value": "50",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "signature_name",
+          "value": "Joseph Ferguson",
+          "confidence": 1.0,
+          "page": 2
+        },
+        {
+          "name": "signature_date",
+          "value": "2025-01-30",
+          "confidence": 1.0,
+          "page": 2
+        }
+      ],
+      "needs_review": false
+    },
+    {
+      "id": "packet_03-inherited_ira_application-b2",
+      "case_id": "packet_03",
+      "file_ref": "packet_03/inherited_ira_application_b2.pdf",
+      "doc_type": "inherited_ira_application",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Roger Ferguson",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "decedent_date_of_death",
+          "value": "2024-10-27",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_type",
+          "value": "traditional_ira",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_title",
+          "value": "Traditional IRA of Roger Ferguson, deceased",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_name",
+          "value": "Dylan Ferguson",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_date_of_birth",
+          "value": "1983-03-19",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "relationship",
+          "value": "child",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "designation",
+          "value": "primary",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "share_percent",
+          "value": "50",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "signature_name",
+          "value": "Dylan Ferguson",
+          "confidence": 1.0,
+          "page": 2
+        },
+        {
+          "name": "signature_date",
+          "value": "2025-01-05",
+          "confidence": 1.0,
+          "page": 2
+        }
+      ],
+      "needs_review": false
+    },
+    {
+      "id": "packet_03-letters_testamentary",
+      "case_id": "packet_03",
+      "file_ref": "packet_03/letters_testamentary.pdf",
+      "doc_type": "letters_testamentary",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Roger Ferguson",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_death",
+          "value": "2024-10-27",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "case_number",
+          "value": "PR-2024-38811",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "court_name",
+          "value": "Probate Court of Le County",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "court_county",
+          "value": "Le County",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_issued",
+          "value": "2024-11-27",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "executor_name",
+          "value": "Joseh Ferguson",
+          "confidence": 1.0,
+          "page": 1
+        }
+      ],
+      "needs_review": false
+    }
+  ],
+  "planted_errors": [
+    "name_match"
+  ],
+  "planted_error_details": [
+    {
+      "rule_id": "name_match",
+      "note": "letters_testamentary.executor_name reads 'Joseh Ferguson'; the application reads 'Joseph Ferguson'.",
+      "document_id": "packet_03-letters_testamentary",
+      "beneficiary_id": "packet_03-b1"
+    }
+  ]
+}

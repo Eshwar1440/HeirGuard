@@ -1,0 +1,185 @@
+{
+  "packet_id": "packet_04",
+  "description": "One adult child inherits a Roth IRA. The application shows a date of death one day off from the death certificate.",
+  "notice": "SPECIMEN - HYPOTHETICAL DATA. No real person, account or record.",
+  "decedent": {
+    "id": "packet_04-d1",
+    "name": "Meghan Gardner",
+    "date_of_birth": "1954-03-14",
+    "date_of_death": "2025-04-30",
+    "rmds_started": null
+  },
+  "accounts": [
+    {
+      "id": "packet_04-a1",
+      "type": "roth_ira",
+      "title": "Roth IRA of Meghan Gardner, deceased",
+      "balance": "512445.63"
+    }
+  ],
+  "beneficiaries": [
+    {
+      "id": "packet_04-b1",
+      "name": "Matthew Gardner",
+      "date_of_birth": "1979-01-07",
+      "relationship": "child",
+      "share_percent": "100",
+      "designation": "primary",
+      "account_id": "packet_04-a1",
+      "beneficiary_class": "designated",
+      "disabled": null,
+      "chronically_ill": null
+    }
+  ],
+  "documents": [
+    {
+      "id": "packet_04-death_certificate",
+      "case_id": "packet_04",
+      "file_ref": "packet_04/death_certificate.pdf",
+      "doc_type": "death_certificate",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Meghan Gardner",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_birth",
+          "value": "1954-03-14",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_death",
+          "value": "2025-04-30",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "place_of_death",
+          "value": "Michelleton",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "issuing_county",
+          "value": "Gross County",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "issuing_state",
+          "value": "Oklahoma",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certificate_number",
+          "value": "2025-222-104257",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_issued",
+          "value": "2025-05-22",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certified_copy",
+          "value": "yes",
+          "confidence": 1.0,
+          "page": 1
+        }
+      ],
+      "needs_review": false
+    },
+    {
+      "id": "packet_04-inherited_ira_application-b1",
+      "case_id": "packet_04",
+      "file_ref": "packet_04/inherited_ira_application_b1.pdf",
+      "doc_type": "inherited_ira_application",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Meghan Gardner",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "decedent_date_of_death",
+          "value": "2025-05-01",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_type",
+          "value": "roth_ira",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_title",
+          "value": "Roth IRA of Meghan Gardner, deceased",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_name",
+          "value": "Matthew Gardner",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_date_of_birth",
+          "value": "1979-01-07",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "relationship",
+          "value": "child",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "designation",
+          "value": "primary",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "share_percent",
+          "value": "100",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "signature_name",
+          "value": "Matthew Gardner",
+          "confidence": 1.0,
+          "page": 2
+        },
+        {
+          "name": "signature_date",
+          "value": "2025-06-21",
+          "confidence": 1.0,
+          "page": 2
+        }
+      ],
+      "needs_review": false
+    }
+  ],
+  "planted_errors": [
+    "dod_consistent"
+  ],
+  "planted_error_details": [
+    {
+      "rule_id": "dod_consistent",
+      "note": "inherited_ira_application.decedent_date_of_death reads 2025-05-01; the death certificate reads 2025-04-30.",
+      "document_id": "packet_04-inherited_ira_application-b1",
+      "beneficiary_id": "packet_04-b1"
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "packet_id": "packet_05",
+  "description": "Two adult children inherit a traditional IRA from a parent who died before RMDs began. The second child's application is missing.",
+  "notice": "SPECIMEN - HYPOTHETICAL DATA. No real person, account or record.",
+  "decedent": {
+    "id": "packet_05-d1",
+    "name": "Crystal Torres",
+    "date_of_birth": "1962-01-09",
+    "date_of_death": "2024-05-25",
+    "rmds_started": false
+  },
+  "accounts": [
+    {
+      "id": "packet_05-a1",
+      "type": "traditional_ira",
+      "title": "Traditional IRA of Crystal Torres, deceased",
+      "balance": "294819.43"
+    }
+  ],
+  "beneficiaries": [
+    {
+      "id": "packet_05-b1",
+      "name": "Ashley Torres",
+      "date_of_birth": "1994-12-26",
+      "relationship": "child",
+      "share_percent": "50",
+      "designation": "primary",
+      "account_id": "packet_05-a1",
+      "beneficiary_class": "designated",
+      "disabled": null,
+      "chronically_ill": null
+    },
+    {
+      "id": "packet_05-b2",
+      "name": "Antonio Torres",
+      "date_of_birth": "1988-11-21",
+      "relationship": "child",
+      "share_percent": "50",
+      "designation": "primary",
+      "account_id": "packet_05-a1",
+      "beneficiary_class": "designated",
+      "disabled": null,
+      "chronically_ill": null
+    }
+  ],
+  "documents": [
+    {
+      "id": "packet_05-death_certificate",
+      "case_id": "packet_05",
+      "file_ref": "packet_05/death_certificate.pdf",
+      "doc_type": "death_certificate",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Crystal Torres",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_birth",
+          "value": "1962-01-09",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_death",
+          "value": "2024-05-25",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "place_of_death",
+          "value": "Joneston",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "issuing_county",
+          "value": "Clark County",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "issuing_state",
+          "value": "Wisconsin",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certificate_number",
+          "value": "2024-139-726593",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_issued",
+          "value": "2024-06-02",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certified_copy",
+          "value": "yes",
+          "confidence": 1.0,
+          "page": 1
+        }
+      ],
+      "needs_review": false
+    },
+    {
+      "id": "packet_05-inherited_ira_application-b1",
+      "case_id": "packet_05",
+      "file_ref": "packet_05/inherited_ira_application_b1.pdf",
+      "doc_type": "inherited_ira_application",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Crystal Torres",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "decedent_date_of_death",
+          "value": "2024-05-25",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_type",
+          "value": "traditional_ira",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_title",
+          "value": "Traditional IRA of Crystal Torres, deceased",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_name",
+          "value": "Ashley Torres",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_date_of_birth",
+          "value": "1994-12-26",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "relationship",
+          "value": "child",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "designation",
+          "value": "primary",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "share_percent",
+          "value": "50",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "signature_name",
+          "value": "Ashley Torres",
+          "confidence": 1.0,
+          "page": 2
+        },
+        {
+          "name": "signature_date",
+          "value": "2024-08-31",
+          "confidence": 1.0,
+          "page": 2
+        }
+      ],
+      "needs_review": false
+    }
+  ],
+  "planted_errors": [
+    "required_docs_present"
+  ],
+  "planted_error_details": [
+    {
+      "rule_id": "required_docs_present",
+      "note": "Required inherited_ira_application is missing for Antonio Torres.",
+      "document_id": null,
+      "beneficiary_id": "packet_05-b2"
+    }
+  ]
+}

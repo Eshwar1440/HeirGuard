@@ -1,0 +1,185 @@
+{
+  "packet_id": "packet_06",
+  "description": "A sibling less than 10 years younger inherits a traditional IRA. The death certificate is a photocopy marked COPY - NOT CERTIFIED.",
+  "notice": "SPECIMEN - HYPOTHETICAL DATA. No real person, account or record.",
+  "decedent": {
+    "id": "packet_06-d1",
+    "name": "Julie Maldonado",
+    "date_of_birth": "1946-09-01",
+    "date_of_death": "2025-03-25",
+    "rmds_started": true
+  },
+  "accounts": [
+    {
+      "id": "packet_06-a1",
+      "type": "traditional_ira",
+      "title": "Traditional IRA of Julie Maldonado, deceased",
+      "balance": "154071.19"
+    }
+  ],
+  "beneficiaries": [
+    {
+      "id": "packet_06-b1",
+      "name": "Jasmine Maldonado",
+      "date_of_birth": "1950-07-25",
+      "relationship": "sibling",
+      "share_percent": "100",
+      "designation": "primary",
+      "account_id": "packet_06-a1",
+      "beneficiary_class": "eligible_designated",
+      "disabled": null,
+      "chronically_ill": null
+    }
+  ],
+  "documents": [
+    {
+      "id": "packet_06-death_certificate",
+      "case_id": "packet_06",
+      "file_ref": "packet_06/death_certificate.pdf",
+      "doc_type": "death_certificate",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Julie Maldonado",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_birth",
+          "value": "1946-09-01",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_of_death",
+          "value": "2025-03-25",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "place_of_death",
+          "value": "New Juliemouth",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "issuing_county",
+          "value": "Wong County",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "issuing_state",
+          "value": "Colorado",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certificate_number",
+          "value": "2025-699-774978",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "date_issued",
+          "value": "2025-04-08",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "certified_copy",
+          "value": "no",
+          "confidence": 1.0,
+          "page": 1
+        }
+      ],
+      "needs_review": false
+    },
+    {
+      "id": "packet_06-inherited_ira_application-b1",
+      "case_id": "packet_06",
+      "file_ref": "packet_06/inherited_ira_application_b1.pdf",
+      "doc_type": "inherited_ira_application",
+      "fields": [
+        {
+          "name": "decedent_name",
+          "value": "Julie Maldonado",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "decedent_date_of_death",
+          "value": "2025-03-25",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_type",
+          "value": "traditional_ira",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "account_title",
+          "value": "Traditional IRA of Julie Maldonado, deceased",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_name",
+          "value": "Jasmine Maldonado",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "beneficiary_date_of_birth",
+          "value": "1950-07-25",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "relationship",
+          "value": "sibling",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "designation",
+          "value": "primary",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "share_percent",
+          "value": "100",
+          "confidence": 1.0,
+          "page": 1
+        },
+        {
+          "name": "signature_name",
+          "value": "Jasmine Maldonado",
+          "confidence": 1.0,
+          "page": 2
+        },
+        {
+          "name": "signature_date",
+          "value": "2025-07-23",
+          "confidence": 1.0,
+          "page": 2
+        }
+      ],
+      "needs_review": false
+    }
+  ],
+  "planted_errors": [
+    "certified_copy"
+  ],
+  "planted_error_details": [
+    {
+      "rule_id": "certified_copy",
+      "note": "Death certificate is a photocopy marked COPY - NOT CERTIFIED, with no registrar seal.",
+      "document_id": "packet_06-death_certificate",
+      "beneficiary_id": null
+    }
+  ]
+}
