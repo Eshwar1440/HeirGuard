@@ -14,6 +14,11 @@ from hg.config import get_settings
 
 log = logging.getLogger(__name__)
 
+#: Tables PostgresSaver.setup() creates in the public schema. Supabase exposes public tables
+#: through its Data API, so they get row-level security with no policies: browser keys get
+#: nothing, while the backend connects as the table owner and is unaffected.
+CHECKPOINT_TABLES = ("checkpoints", "checkpoint_blobs", "checkpoint_writes", "checkpoint_migrations")
+
 
 @lru_cache
 def get_checkpointer():
@@ -37,6 +42,9 @@ def get_checkpointer():
     )
     saver = PostgresSaver(pool)
     saver.setup()
+    with pool.connection() as conn:
+        for table in CHECKPOINT_TABLES:
+            conn.execute(f"alter table if exists public.{table} enable row level security")
     return saver
 
 
