@@ -83,10 +83,10 @@ export default function OptionsSection({ caseState, chartVariant }: Props) {
             <TextField select label="Filing status" size="small" value={filing} onChange={(e) => setFiling(e.target.value as FilingStatus)}>
               {Object.entries(FILING_LABELS).map(([k, v]) => <MenuItem key={k} value={k}>{v}</MenuItem>)}
             </TextField>
-            <TextField label="State tax rate (optional)" size="small" value={stateRate} onChange={(e) => setStateRate(e.target.value)} placeholder="0"
+            <TextField label="State tax rate" size="small" value={stateRate} onChange={(e) => setStateRate(e.target.value)} placeholder="Optional"
               slotProps={{ input: { endAdornment: <InputAdornment position="end">%</InputAdornment> } }} />
-            <TextField size="small" value={growth} onChange={(e) => setGrowth(e.target.value)} placeholder="default"
-              label={<Stack direction="row" spacing={0.75} component="span" sx={{ alignItems: 'center' }}><span>Growth</span><HypotheticalChip small /></Stack>}
+            {/* Empty uses the backend's default growth rate, labeled hypothetical in the assumptions and Simulator tab. */}
+            <TextField label="Growth rate" size="small" value={growth} onChange={(e) => setGrowth(e.target.value)} placeholder="Default"
               slotProps={{ input: { endAdornment: <InputAdornment position="end">%/yr</InputAdornment> } }} />
             <Button variant="contained" onClick={run} disabled={!incomeOk || !ready || sim.isPending} data-testid="compare-options" sx={{ py: 1.1 }}>
               {sim.isPending ? 'Comparing…' : scenarios.length ? 'Update' : 'Compare options'}
