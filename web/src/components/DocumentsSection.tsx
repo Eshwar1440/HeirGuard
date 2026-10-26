@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Box, Button, Stack } from '@mui/material';
 import type { CaseState } from '../api/types';
-import { isReading, usePatchField, useSubmitForReview, useUploadDocuments } from '../api/hooks';
+import { isReading, useSubmitForReview, useUploadDocuments } from '../api/hooks';
 import { allPass } from '../lib/case';
-import BeneficiaryCard, { type PendingEdit } from './BeneficiaryCard';
+import BeneficiaryCard from './BeneficiaryCard';
 import ReadingProgress from './ReadingProgress';
 import { Banner, ErrorCard, SectionHeader } from './common';
 
@@ -16,36 +16,23 @@ interface Props {
 export default function DocumentsSection({ caseState, onOpenOps, layout = 'side' }: Props) {
   const id = caseState.case_id;
   const upload = useUploadDocuments(id);
-  const patch = usePatchField(id);
   const submit = useSubmitForReview(id);
-  const [edits, setEdits] = useState<Record<string, PendingEdit>>({});
   const [files, setFiles] = useState<Record<string, File[]>>({});
 
-  const reading = isReading(caseState) || upload.isPending || patch.isPending;
+  const reading = isReading(caseState) || upload.isPending;
   const fixing = caseState.waiting_for === 'heir_fix';
   const pass = allPass(caseState);
   const checks = caseState.checks ?? [];
   const fails = checks.filter((k) => k.status === 'fail').length;
   const reviews = checks.filter((k) => k.status === 'needs_review').length;
   const pendingFiles = Object.values(files).flat();
-  const changed = Object.values(edits).filter((e) => {
-    const doc = caseState.documents.find((d) => d.id === e.document_id);
-    return String(doc?.fields.find((f) => f.name === e.field)?.value ?? '') !== e.value.trim();
-  });
-  const hasPending = pendingFiles.length > 0 || changed.length > 0;
-  const mutationError = (upload.error ?? patch.error ?? submit.error) as Error | null;
+  const hasPending = pendingFiles.length > 0;
+  const mutationError = (upload.error ?? submit.error) as Error | null;
   const people = (caseState.beneficiaries ?? []).length;
 
-  // Each correction resumes the flow and re-runs the checks, so send them one at a time
-  // while the case still waits for a fix, then any uploads.
+  // Values are never edited: the corrected documents are read and every check runs again.
   async function recheck() {
-    let current = caseState;
-    for (const e of changed) {
-      if (current.waiting_for !== 'heir_fix') break;
-      current = await patch.mutateAsync({ ...e, value: e.value.trim() });
-    }
-    if (pendingFiles.length && current.waiting_for === 'heir_fix') await upload.mutateAsync(pendingFiles);
-    setEdits({});
+    await upload.mutateAsync(pendingFiles);
     setFiles({});
   }
 
@@ -68,8 +55,7 @@ export default function DocumentsSection({ caseState, onOpenOps, layout = 'side'
         <>
           <Box sx={{ display: 'grid', gridTemplateColumns: layout === 'stacked' ? '1fr' : 'repeat(2, minmax(0, 1fr))', gap: 2 }}>
             {(caseState.beneficiaries ?? []).map((b) => (
-              <BeneficiaryCard key={b.id} caseState={caseState} beneficiary={b} stacked={layout === 'stacked'} editable={fixing}
-                edits={edits} onEdit={(e) => setEdits((s) => ({ ...s, [`${e.document_id}.${e.field}`]: e }))}
+              <BeneficiaryCard key={b.id} caseState={caseState} beneficiary={b} stacked={layout === 'stacked'} canUpload={fixing}
                 files={files[b.id] ?? []} onFiles={(f) => setFiles((s) => ({ ...s, [b.id]: f }))} />
             ))}
           </Box>
@@ -81,7 +67,7 @@ export default function DocumentsSection({ caseState, onOpenOps, layout = 'side'
           )}
           {fails > 0 && (
             <Banner tone="fail">
-              <strong>{fails === 1 ? 'One issue' : `${fails} issues`} to fix before this can move forward.</strong> Correct the field on the card or upload an updated document, then re-check.
+              <strong>{fails === 1 ? 'One issue' : `${fails} issues`} to fix before this can move forward.</strong> Upload a corrected document on the card, then re-check.
             </Banner>
           )}
           {!fails && reviews > 0 && fixing && (
@@ -89,7 +75,7 @@ export default function DocumentsSection({ caseState, onOpenOps, layout = 'side'
               <Button variant="outlined" onClick={() => submit.mutate()} disabled={submit.isPending} data-testid="submit-for-review" sx={{ flex: 'none', bgcolor: '#fff' }}>
                 Send to estate operations
               </Button>}>
-              <strong>{reviews === 1 ? 'One item needs' : `${reviews} items need`} a second look.</strong> Fix it here, or send it to estate operations to review with the packet.
+              <strong>{reviews === 1 ? 'One item needs' : `${reviews} items need`} a second look.</strong> Upload a corrected document, or send it to estate operations to review with the packet.
             </Banner>
           )}
           {caseState.approved && (
