@@ -29,6 +29,7 @@ interface Props {
 export default function BeneficiaryCard({ caseState, beneficiary: b, files, onFiles, stacked, canUpload }: Props) {
   const checks = checksFor(caseState, b);
   const failing = checks.filter((c) => c.status !== 'pass');
+  const ok = checks.length > 0 && failing.length === 0;
   const app = applicationFor(caseState, b);
   const failingFields = new Set(failing.flatMap((c) => (c.evidence ?? []).filter((e) => e.document_id === app?.id).map((e) => e.field_name)));
 
@@ -38,7 +39,7 @@ export default function BeneficiaryCard({ caseState, beneficiary: b, files, onFi
   });
 
   return (
-    <Card data-testid={`beneficiary-${b.id}`} sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Card data-testid={`beneficiary-${b.id}`} sx={{ borderTop: `3px solid ${ok ? t.pass : t.fail}`, display: 'flex', flexDirection: 'column' }}>
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', px: 2.25, py: 1.75, bgcolor: t.panel, borderBottom: `1px solid ${t.rowRule}` }}>
         <Box>
           <Typography sx={{ fontSize: 15.5, fontWeight: 600, color: t.navy }}>{b.name}</Typography>
