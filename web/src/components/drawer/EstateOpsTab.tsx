@@ -1,4 +1,5 @@
-import { Button, Stack, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Button, Stack, TextField, Typography } from '@mui/material';
 import type { CaseState } from '../../api/types';
 import { isReading, useApprove, useLoadSampleDocuments } from '../../api/hooks';
 import { allPass, failCount } from '../../lib/case';
@@ -7,6 +8,7 @@ import { tokens as t } from '../../theme';
 
 export default function EstateOpsTab({ caseState }: { caseState: CaseState }) {
   const approve = useApprove(caseState.case_id);
+  const [reason, setReason] = useState('');
   const sample = useLoadSampleDocuments(caseState.case_id);
   const noDocuments = !caseState.documents.length && caseState.waiting_for === 'heir_fix';
   const pass = allPass(caseState);
@@ -34,6 +36,16 @@ export default function EstateOpsTab({ caseState }: { caseState: CaseState }) {
       <Button variant="contained" color="secondary" size="large" disabled={!can || approve.isPending} onClick={() => approve.mutate()} data-testid="approve">
         {caseState.approved ? 'Approved' : approve.isPending ? 'Approving…' : 'Approve packet'}
       </Button>
+      {can && (
+        <Stack spacing={1} sx={{ border: `1px solid ${t.rule}`, borderRadius: 1, p: 1.5 }}>
+          <TextField label="Reason for returning (the heir sees this)" size="small" multiline minRows={2} value={reason}
+            onChange={(e) => setReason(e.target.value)} slotProps={{ htmlInput: { 'data-testid': 'return-reason' } }} />
+          <Button variant="outlined" color="error" disabled={!reason.trim() || approve.isPending} data-testid="return-to-heir"
+            onClick={() => approve.mutate({ approved: false, note: reason.trim() }, { onSuccess: () => setReason('') })}>
+            Return to heir
+          </Button>
+        </Stack>
+      )}
       <Typography variant="caption">{note}</Typography>
       {approve.isError && <ErrorCard title="Approval failed" message={(approve.error as Error).message} />}
       {noDocuments && (

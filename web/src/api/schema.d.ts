@@ -397,6 +397,8 @@ export interface components {
                 [key: string]: unknown;
             } | null;
             handoff?: components["schemas"]["PrefillHandoff"] | null;
+            /** Review Note */
+            review_note?: string | null;
         };
         /** CheckResult */
         CheckResult: {

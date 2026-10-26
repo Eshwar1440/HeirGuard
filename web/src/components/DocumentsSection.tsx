@@ -67,12 +67,20 @@ export default function DocumentsSection({ caseState, layout = 'side' }: Props) 
             // The approval itself happens under the hood (Estate ops tab), not on the heir's page.
             <Banner tone="pass"><strong>All checks passed for {people === 2 ? 'both beneficiaries' : 'every beneficiary'}.</strong></Banner>
           )}
+          {caseState.review_note && fixing && (
+            <Banner tone="amber" action={!fails ? (
+              <Button variant="outlined" onClick={() => submit.mutate()} disabled={submit.isPending} data-testid="resubmit" sx={{ flex: 'none', bgcolor: '#fff' }}>
+                Send for review again
+              </Button>) : undefined}>
+              <strong>Your documents need another look.</strong> {caseState.review_note} Upload a corrected document on the card, then re-check.
+            </Banner>
+          )}
           {fails > 0 && (
             <Banner tone="fail">
               <strong>{fails === 1 ? 'One issue' : `${fails} issues`} to fix before this can move forward.</strong> Upload a corrected document on the card, then re-check.
             </Banner>
           )}
-          {!fails && reviews > 0 && fixing && (
+          {!fails && reviews > 0 && fixing && !caseState.review_note && (
             <Banner tone="amber" action={
               <Button variant="outlined" onClick={() => submit.mutate()} disabled={submit.isPending} data-testid="submit-for-review" sx={{ flex: 'none', bgcolor: '#fff' }}>
                 Send for review

@@ -70,7 +70,8 @@ export const useLoadSampleDocuments = (id: string | null) =>
 export const useSubmitForReview = (id: string | null) =>
   useCaseMutation<void>(id, (cid) => api.post<CaseView>(`/cases/${cid}/submit-for-review`));
 
-export const useApprove = (id: string | null) => useCaseMutation<void>(id, (cid) => api.post<CaseView>(`/cases/${cid}/approve`));
+export const useApprove = (id: string | null) =>
+  useCaseMutation<{ approved: boolean; note?: string } | void>(id, (cid, v) => api.post<CaseView>(`/cases/${cid}/approve`, v ?? { approved: true }));
 
 export const useSimulate = (id: string | null) =>
   useCaseMutation<HeirInputs>(id, (cid, inputs) => api.post<CaseView>(`/cases/${cid}/simulate`, inputs));
