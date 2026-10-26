@@ -18,7 +18,7 @@ export default function EstateOpsTab({ caseState }: { caseState: CaseState }) {
   const note = caseState.approved ? 'Approved. The flow resumed at simulate.'
     : reading ? 'Waiting for checks to finish.'
     : can ? (pass ? `All ${caseState.checks?.length ?? 0} checks passed.` : `The heir sent ${fails} review item${fails > 1 ? 's' : ''} with the packet. Review before approving.`)
-    : fails ? `Blocked: ${fails} check${fails > 1 ? 's' : ''} not passing. The heir has to fix ${fails > 1 ? 'them' : 'it'} first.`
+    : fails ? `Blocked: ${fails} check${fails > 1 ? 's' : ''} not passing.`
     : 'Waiting for checks.';
 
   return (
