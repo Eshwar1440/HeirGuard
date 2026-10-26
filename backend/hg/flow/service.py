@@ -115,9 +115,12 @@ def list_samples() -> list[Sample]:
             for p in index]
 
 
-def create_case(sample_id: Optional[str] = None, beneficiary_id: Optional[str] = None) -> CaseView:
-    """Open a case. A sample brings the decedent, accounts and designations on file plus its
-    packet's documents, which the flow then reads like any upload."""
+def create_case(
+    sample_id: Optional[str] = None, beneficiary_id: Optional[str] = None, with_documents: bool = True,
+) -> CaseView:
+    """Open a case. A sample brings the decedent, accounts and designations on file. With
+    with_documents its packet is read at once; without, the case waits for the heir to upload
+    (or for POST /cases/{id}/sample-documents in a demo)."""
     case_id = f"case-{uuid4().hex[:12]}"
     uploads: list[str] = []
     if sample_id:
@@ -125,15 +128,30 @@ def create_case(sample_id: Optional[str] = None, beneficiary_id: Optional[str] =
             raise FlowError(404, f"no sample {sample_id!r}")
         truth = load_truth(get_settings().data_dir / "packets" / sample_id)
         case = truth.case_state().model_copy(update={"case_id": case_id, "documents": []})
-        uploads = [files.sample_ref(sample_id, files.filename_of(d.file_ref)) for d in truth.documents]
+        if with_documents:
+            uploads = sample_uploads(sample_id)
     else:
         case = CaseState(case_id=case_id)
     ids = [b.id for b in case.beneficiaries]
     if beneficiary_id and beneficiary_id not in ids:
         raise FlowError(422, f"no beneficiary {beneficiary_id!r} in this case")
     state = {"case": case.model_dump(mode="json"), "heir_id": beneficiary_id or (ids[0] if ids else None),
-             "pending_uploads": uploads, "audit": []}
+             "pending_uploads": uploads, "audit": [], "sample_id": sample_id}
     return _run(case_id, state)
+
+
+def sample_uploads(sample_id: str) -> list[str]:
+    truth = load_truth(get_settings().data_dir / "packets" / sample_id)
+    return [files.sample_ref(sample_id, files.filename_of(d.file_ref)) for d in truth.documents]
+
+
+def load_sample_documents(case_id: str) -> CaseView:
+    """Demo helper (under the hood): read the case's sample packet as if the heir uploaded it."""
+    sample_id = _snapshot(case_id).values.get("sample_id")
+    if not sample_id:
+        raise FlowError(409, "this case has no sample packet")
+    _require(case_id, HEIR_FIX)
+    return _resume(case_id, HEIR_FIX, HeirFix(uploads=sample_uploads(sample_id)).model_dump())
 
 
 def add_documents(case_id: str, uploads: list[tuple[str, bytes, str]]) -> CaseView:
@@ -147,6 +165,8 @@ def add_documents(case_id: str, uploads: list[tuple[str, bytes, str]]) -> CaseVi
 
 def submit_for_review(case_id: str) -> CaseView:
     view = _require(case_id, HEIR_FIX)
+    if not view.case.documents:
+        raise FlowError(409, "upload the documents first")
     failed = sorted({c.rule_id for c in view.case.checks if c.status == "fail"})
     if failed:
         raise FlowError(409, "these checks must be fixed first: " + ", ".join(failed))
