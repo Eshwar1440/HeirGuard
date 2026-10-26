@@ -30,7 +30,6 @@ export default function EstateOpsTab({ caseState }: { caseState: CaseState }) {
         ['Case', <Mono>{caseState.case_id}</Mono>],
         ['Status', <Mono>{String(caseState.status ?? '—')}</Mono>],
         ['Documents', String(caseState.documents?.length ?? 0)],
-        ['Checks', <span style={{ color: fails ? t.fail : t.pass }}>{(caseState.checks?.length ?? 0) - fails} pass · {fails} not passing</span>],
         ['Approved', caseState.approved ? 'yes' : 'no'],
       ]} />
       <Button variant="contained" color="secondary" size="large" disabled={!can || approve.isPending} onClick={() => approve.mutate()} data-testid="approve">
