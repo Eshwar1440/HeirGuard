@@ -109,7 +109,7 @@ export default function App() {
 
           {c && (
             <>
-              <DocumentsSection caseState={c} onOpenOps={() => { setDrawerOpen(true); setTab('ops'); }} />
+              <DocumentsSection caseState={c} />
               <OptionsSection caseState={c} />
               <NextStep caseState={c} />
               <AfterSection caseState={c} />

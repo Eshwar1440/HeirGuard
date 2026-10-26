@@ -36,7 +36,7 @@ test('1. best case: packet_01_fixed runs straight through to a prefilled applica
 
   await openDrawer(page, 'ops');
   await page.getByTestId('approve').click();
-  await expect(page.getByText('Approved by estate operations')).toBeVisible();
+  await expect(page.getByText('Your documents are approved')).toBeVisible();
 
   await page.getByTestId('input-income').fill('95000');
   await page.getByTestId('compare-options').click();

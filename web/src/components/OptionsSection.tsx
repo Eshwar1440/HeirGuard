@@ -52,7 +52,7 @@ export default function OptionsSection({ caseState, chartVariant }: Props) {
     return (
       <Stack component="section" spacing={1.75}>
         <SectionHeader n="02" title="Your options" />
-        <Placeholder>Unlocks after estate operations approves the documents.</Placeholder>
+        <Placeholder>Your options open once your documents are approved.</Placeholder>
       </Stack>
     );
   }

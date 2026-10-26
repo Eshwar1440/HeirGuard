@@ -9,11 +9,10 @@ import { Banner, ErrorCard, SectionHeader } from './common';
 
 interface Props {
   caseState: CaseState;
-  onOpenOps: () => void;
   layout?: 'side' | 'stacked';
 }
 
-export default function DocumentsSection({ caseState, onOpenOps, layout = 'side' }: Props) {
+export default function DocumentsSection({ caseState, layout = 'side' }: Props) {
   const id = caseState.case_id;
   const upload = useUploadDocuments(id);
   const submit = useSubmitForReview(id);
@@ -61,9 +60,8 @@ export default function DocumentsSection({ caseState, onOpenOps, layout = 'side'
           </Box>
 
           {pass && caseState.waiting_for === 'approval' && (
-            <Banner tone="info" action={<Button variant="contained" color="secondary" onClick={onOpenOps} sx={{ flex: 'none' }}>Open Estate ops</Button>}>
-              <strong>All checks passed for {people === 2 ? 'both beneficiaries' : 'every beneficiary'}.</strong> Estate operations reviews the packet before options open.
-            </Banner>
+            // The approval itself happens under the hood (Estate ops tab), not on the heir's page.
+            <Banner tone="pass"><strong>All checks passed for {people === 2 ? 'both beneficiaries' : 'every beneficiary'}.</strong></Banner>
           )}
           {fails > 0 && (
             <Banner tone="fail">
@@ -73,13 +71,13 @@ export default function DocumentsSection({ caseState, onOpenOps, layout = 'side'
           {!fails && reviews > 0 && fixing && (
             <Banner tone="amber" action={
               <Button variant="outlined" onClick={() => submit.mutate()} disabled={submit.isPending} data-testid="submit-for-review" sx={{ flex: 'none', bgcolor: '#fff' }}>
-                Send to estate operations
+                Send for review
               </Button>}>
-              <strong>{reviews === 1 ? 'One item needs' : `${reviews} items need`} a second look.</strong> Upload a corrected document, or send it to estate operations to review with the packet.
+              <strong>{reviews === 1 ? 'One item needs' : `${reviews} items need`} a second look.</strong> Upload a corrected document, or send it for review with the rest of the packet.
             </Banner>
           )}
           {caseState.approved && (
-            <Banner tone="pass"><strong>Approved by estate operations.</strong> Your options are below.</Banner>
+            <Banner tone="pass"><strong>Your documents are approved.</strong> Your options are below.</Banner>
           )}
         </>
       )}
