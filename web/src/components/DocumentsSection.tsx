@@ -5,6 +5,7 @@ import { isReading, useSubmitForReview, useUploadDocuments } from '../api/hooks'
 import { allPass } from '../lib/case';
 import BeneficiaryCard from './BeneficiaryCard';
 import ReadingProgress from './ReadingProgress';
+import UploadDocuments from './UploadDocuments';
 import { Banner, ErrorCard, SectionHeader } from './common';
 
 interface Props {
@@ -45,12 +46,15 @@ export default function DocumentsSection({ caseState, layout = 'side' }: Props) 
 
       {reading && <ReadingProgress documents={caseState.documents} />}
 
+      {/* First visit: nothing uploaded yet, so the upload card is the whole section. */}
+      {!caseState.documents.length && !reading && <UploadDocuments caseState={caseState} />}
+
       {!reading && mutationError && (
         <ErrorCard title="We couldn't finish checking your documents" message={mutationError.message}
           onRetry={hasPending ? recheck : undefined} />
       )}
 
-      {!reading && (
+      {!reading && caseState.documents.length > 0 && (
         <>
           <Box sx={{ display: 'grid', gridTemplateColumns: layout === 'stacked' ? '1fr' : 'repeat(2, minmax(0, 1fr))', gap: 2 }}>
             {(caseState.beneficiaries ?? []).map((b) => (
