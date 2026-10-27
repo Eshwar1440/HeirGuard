@@ -12,22 +12,22 @@ inherited-account application. The app the heir sees is called **Heir Guard**. A
 
 ## How it works
 
-AI does exactly two jobs: **reading documents** and **writing plain English**. Numbers,
+AI does exactly two jobs: **reading documents** and **writing summaries**. Numbers,
 rules, routing and approval are deterministic code or a person.
 
 ```mermaid
 flowchart LR
-    U[Heir uploads documents] --> R[AI reads each document<br/>hg/reader]
-    R --> G[Case graph<br/>hg/graph, Neo4j]
-    G --> C[Six rule checks<br/>hg/checker]
-    C -- fails --> W1[AI explains the issue<br/>hg/writer + hg/safety]
+    U[Heir uploads documents] --> R[AI reads each document<br/>reader]
+    R --> G[Case graph<br/>graph, Neo4j]
+    G --> C[Six rule checks<br/>checker]
+    C -- fails --> W1[AI explains the issue<br/>writer + safety]
     W1 --> U
     C -- all pass --> A[Reviewer approves or denies<br/>Estate ops tab]
     A -- denied, with a reason --> U
-    A -- approved --> S[Tax simulator, IRS tables<br/>hg/simulator]
-    S --> W2[AI summarizes the options<br/>hg/writer + hg/safety]
+    A -- approved --> S[Tax simulator, IRS tables<br/>simulator]
+    S --> W2[AI summarizes the options<br/>writer + safety]
     W2 --> D{Heir chooses}
-    D -- Keep --> P[Prefilled application<br/>hg/prefill]
+    D -- Keep --> P[Prefilled application<br/>prefill]
     D -- Talk --> T[Summary + specialist number]
     D -- Transfer --> X[Transfer request]
 ```
