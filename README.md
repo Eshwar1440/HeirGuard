@@ -1,4 +1,4 @@
-# HeritageGuard
+# HeirGuard
 
 > **Concept prototype. Not affiliated with Charles Schwab. All data is hypothetical.**
 > Every person, account, balance and document in this repo is synthetic. Any number not
