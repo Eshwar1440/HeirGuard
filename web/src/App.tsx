@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AppBar, Box, Button, MenuItem, Select, Stack, Switch, Toolbar, Typography } from '@mui/material';
+import { Analytics } from '@vercel/analytics/react';
 import { useCase, useCreateCase, useSamples } from './api/hooks';
 import { APP_NAME, FOOTER_TEXT } from './config';
 import { activeStage, caseName, failCount } from './lib/case';
@@ -51,6 +52,7 @@ export default function App() {
 
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', minWidth: 1360 }}>
+      <Analytics />
       <AppBar position="fixed" sx={{ zIndex: (th) => th.zIndex.drawer + 1 }}>
         <Toolbar sx={{ minHeight: '60px !important', px: '28px !important', justifyContent: 'space-between' }}>
           <Stack direction="row" spacing={1.75} sx={{ alignItems: 'center' }}>
