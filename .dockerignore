@@ -1,0 +1,21 @@
+# Build context for backend/Dockerfile is the repo root. Only backend code and the
+# synthetic sample packets go into the image; never secrets or local data.
+.git
+.github
+.env
+.env.*
+!.env.example
+**/node_modules
+**/.venv
+**/__pycache__
+**/*.py[cod]
+**/*.egg-info
+**/.pytest_cache
+**/.hypothesis
+backend/tests
+web
+ai_log
+data/uploads
+supabase
+AGENTS.md
+MODULE_PROMPTS.md
