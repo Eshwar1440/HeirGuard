@@ -10,6 +10,14 @@ It helps an heir of a deceased brokerage client go from uploading documents to a
 inherited-account application. The app the heir sees is called **Heir Guard**. An
 "Under the hood" panel shows every AI step and check, and stands in for the reviewer's view.
 
+## Product Link
+
+[heir-guard-pi.vercel.app](https://heir-guard-pi.vercel.app/)
+
+## Demo Deck
+
+[HeirGuard_Deck.pdf](https://github.com/user-attachments/files/34019319/HeirGuard_Deck.pdf)
+
 ## How it works
 
 AI does exactly two jobs: **reading documents** and **writing summaries**. Numbers,
